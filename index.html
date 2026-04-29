@@ -2,310 +2,183 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font-sans,sans-serif);font-size:14px;color:var(--color-text-primary)}
-
-.proto{
-  border:1.5px solid #888780;
-  border-radius:12px;
-  overflow:hidden;
-  background:var(--color-background-primary)
-}
-
-.char-bar{
-  display:flex;
-  border-bottom:1.5px solid #888780;
-  background:#F1EFE8
-}
-.char-btn{
-  flex:1;padding:10px 4px 8px;font-size:11px;font-weight:500;
-  text-align:center;cursor:pointer;border:none;border-right:1px solid #B4B2A9;
-  background:none;color:#5F5E5A;border-bottom:3px solid transparent;
-  transition:all .15s;line-height:1.3
-}
+.proto{border:1.5px solid #888780;border-radius:12px;overflow:hidden;background:var(--color-background-primary)}
+.char-bar{display:flex;border-bottom:1.5px solid #888780;background:#F1EFE8}
+.char-btn{flex:1;padding:10px 4px 8px;font-size:11px;font-weight:500;text-align:center;cursor:pointer;border:none;border-right:1px solid #B4B2A9;background:none;color:#5F5E5A;border-bottom:3px solid transparent;transition:all .15s;line-height:1.3}
 .char-btn:last-child{border-right:none}
 .char-btn .role{font-size:10px;font-weight:400;color:#888780;display:block;margin-top:1px}
 .char-btn.active{color:#2C2C2A;border-bottom-color:#2C2C2A;background:var(--color-background-primary)}
 .char-btn:hover:not(.active){background:#D3D1C7;color:#2C2C2A}
-
-.view-area{min-height:360px;padding:20px;position:relative}
-.view{display:none}
-.view.active{display:block}
-
-.phase-badge{
-  display:inline-block;font-size:10px;font-weight:500;
-  padding:3px 9px;border-radius:20px;margin-bottom:14px;
-  letter-spacing:0.04em;border:1px solid transparent
-}
+.view-area{min-height:460px;padding:20px;position:relative}
+.view{display:none;width:100%}
+.view.active{display:flex;gap:24px;align-items:flex-start}
+.phase-badge{display:inline-block;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;margin-bottom:14px;letter-spacing:0.04em;border:1px solid transparent}
 .badge-gray{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
 .badge-blue{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
 .badge-green{background:#EAF3DE;color:#27500A;border-color:#97C459}
 .badge-amber{background:#FAEEDA;color:#633806;border-color:#EF9F27}
-
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-.card{
-  background:var(--color-background-primary);
-  border:1.5px solid #B4B2A9;
-  border-radius:10px;
-  padding:12px
-}
-.card h4{
-  font-size:10px;font-weight:500;color:#5F5E5A;
-  text-transform:uppercase;letter-spacing:0.06em;
-  margin-bottom:8px;padding-bottom:6px;
-  border-bottom:1px solid #D3D1C7
-}
-.card-row{
-  display:flex;justify-content:space-between;
-  font-size:12px;padding:4px 0;
-  border-bottom:0.5px solid #D3D1C7
-}
+.card{background:var(--color-background-primary);border:1.5px solid #B4B2A9;border-radius:10px;padding:12px}
+.card h4{font-size:10px;font-weight:500;color:#5F5E5A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #D3D1C7;display:flex;justify-content:space-between;align-items:center}
+.card-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:0.5px solid #D3D1C7}
 .card-row:last-child{border-bottom:none}
-.lbl{color:#5F5E5A}
-.val{font-weight:500;color:#2C2C2A}
-.val-flag{font-weight:500;color:#791F1F}
-.val-ok{font-weight:500;color:#27500A}
-
-.alert-bar{
-  display:flex;align-items:center;gap:8px;
-  border:1.5px solid #85B7EB;border-radius:8px;
-  background:#E6F1FB;padding:9px 12px;
-  margin-bottom:12px;font-size:12px;color:#0C447C
-}
+.lbl{color:#5F5E5A;flex-shrink:0;margin-right:8px}
+.val{font-weight:500;color:#2C2C2A;text-align:right}
+.val-flag{font-weight:500;color:#791F1F;text-align:right}
+.val-ok{font-weight:500;color:#27500A;text-align:right}
+.alert-bar{display:flex;align-items:center;gap:8px;border:1.5px solid #85B7EB;border-radius:8px;background:#E6F1FB;padding:9px 12px;margin-bottom:12px;font-size:12px;color:#0C447C}
 .alert-bar.green{border-color:#97C459;background:#EAF3DE;color:#27500A}
 .alert-dot{width:8px;height:8px;border-radius:50%;background:#378ADD;flex-shrink:0;animation:pdot 1.5s infinite}
 .alert-dot.g{background:#639922;animation:none}
 @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
-
-.warn-bar{
-  border:1.5px solid #EF9F27;border-radius:8px;
-  background:#FAEEDA;padding:9px 12px;
-  font-size:11px;color:#633806;margin-bottom:12px
-}
-.missing-bar{
-  border:1.5px solid #EF9F27;border-radius:8px;
-  background:#FAEEDA;padding:8px 10px;
-  font-size:11px;color:#633806;margin-top:8px
-}
-
-.phone-wrap{display:flex;gap:16px;align-items:flex-start}
-.phone-frame{
-  width:188px;min-width:188px;
-  background:#F1EFE8;
-  border:1.5px solid #888780;
-  border-radius:24px;padding:14px 10px
-}
-.phone-screen{
-  background:#fff;border:1.5px solid #D3D1C7;
-  border-radius:16px;padding:14px 10px;
-  min-height:180px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:9px
-}
-.phone-avatar{
-  width:52px;height:52px;border-radius:50%;
-  background:#E6F1FB;border:1.5px solid #85B7EB;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:500;color:#0C447C
-}
-.phone-name{font-size:12px;font-weight:500;color:#2C2C2A}
-.phone-sub{font-size:10px;color:#5F5E5A}
-.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:24px}
-.wbar{width:3px;border-radius:2px;background:#378ADD;animation:wv .8s ease-in-out infinite}
-.wbar:nth-child(1){height:8px}
-.wbar:nth-child(2){height:14px;animation-delay:.1s}
-.wbar:nth-child(3){height:20px;animation-delay:.2s}
-.wbar:nth-child(4){height:10px;animation-delay:.3s}
-.wbar:nth-child(5){height:16px;animation-delay:.4s}
-@keyframes wv{0%,100%{opacity:.4;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
-
-.hold-ring{
-  width:60px;height:60px;border-radius:50%;
-  border:2.5px solid #D3D1C7;
-  display:flex;align-items:center;justify-content:center;
-  animation:hring 2s ease-in-out infinite
-}
-@keyframes hring{0%,100%{border-color:#D3D1C7}50%{border-color:#378ADD}}
-
+.missing-bar{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:8px 10px;font-size:11px;color:#633806;margin-top:8px}
 .side-note{flex:1;padding-top:4px}
 .side-note .title{font-size:12px;font-weight:500;margin-bottom:6px}
 .side-note .body{font-size:12px;color:#5F5E5A;line-height:1.6}
 .side-note .foot{margin-top:8px;font-size:11px;color:#888780}
-
-.success-tick{font-size:28px;color:#639922;margin-bottom:8px;display:block;text-align:center}
-
-.charge-box{
-  background:#FCEBEB;border:1.5px solid #F09595;
-  border-radius:8px;padding:9px;text-align:left;width:100%
-}
-.charge-box .ctitle{font-size:10px;color:#791F1F;font-weight:500}
-.charge-box .camount{font-size:14px;font-weight:500;color:#501313;margin-top:2px}
-.charge-box .csub{font-size:10px;color:#A32D2D;margin-top:2px}
-
-.resolve-box{
-  background:#EAF3DE;border:1.5px solid #97C459;
-  border-radius:8px;padding:9px;width:100%;text-align:left
-}
-.resolve-box .rtitle{font-size:10px;font-weight:500;color:#27500A}
-.resolve-box .rval{font-size:12px;color:#3B6D11;margin-top:2px}
-.resolve-box .rsub{font-size:10px;color:#3B6D11;margin-top:2px}
-
-.progress-track{width:100%;height:3px;background:#D3D1C7;border-radius:2px;overflow:hidden;margin-top:4px}
-.progress-fill{height:100%;background:#378ADD;border-radius:2px;animation:prog 3s ease-in-out infinite}
-@keyframes prog{0%{width:0%}70%{width:85%}100%{width:95%}}
-
-.call-btn{
-  margin-top:8px;width:100%;padding:7px;
-  border-radius:8px;border:none;
-  background:#185FA5;color:#fff;
-  font-size:11px;cursor:pointer;font-weight:500
-}
-
-.data-box{
-  background:#F1EFE8;border:1.5px solid #B4B2A9;
-  border-radius:8px;padding:11px 13px;
-  font-family:monospace;font-size:11px;line-height:1.8;
-  color:#5F5E5A;margin-top:0
-}
-.dk{color:#185FA5}
-.dv{color:#3B6D11}
-.dv-pop{color:#BA7517}
-.dv-null{color:#B4B2A9}
-
-.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.sys-node{
-  border:1.5px solid #D3D1C7;border-radius:8px;
-  padding:9px 11px;font-size:11px;position:relative;overflow:hidden
-}
-.sys-node.active{border-color:#378ADD;background:#E6F1FB}
-.sys-node h5{
-  font-size:10px;font-weight:500;text-transform:uppercase;
-  letter-spacing:0.05em;color:#5F5E5A;margin-bottom:3px;
-  display:flex;align-items:center;gap:5px
-}
-.sys-node p{font-size:11px;color:#2C2C2A;font-family:monospace}
-.fill-bar{position:absolute;bottom:0;left:0;height:2.5px;background:#378ADD;transition:width .4s ease}
-.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sdot-on{background:#639922}
-.sdot-off{background:#D3D1C7}
-.sdot-proc{background:#BA7517;animation:pdot .7s infinite}
-
-.queue-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:8px;
-  background:var(--color-background-primary);
-  border:1.5px solid #D3D1C7;
-  margin-bottom:6px;font-size:12px
-}
+.highlight{background:#EAF3DE;border:1px solid #97C459;border-radius:6px;padding:7px 10px;font-size:11px;color:#27500A;margin-top:8px}
+.transcript{font-size:11px;color:#5F5E5A;margin-top:8px;font-style:italic;line-height:1.5}
+.edit-btn{font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;border:1.5px solid #B4B2A9;background:#F1EFE8;color:#5F5E5A;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.edit-btn:hover{background:#D3D1C7;border-color:#888780;color:#2C2C2A}
+.edit-btn.saving{border-color:#97C459;background:#EAF3DE;color:#27500A}
+.edit-input{width:100%;border:1.5px solid #85B7EB;border-radius:5px;padding:2px 5px;font-size:12px;font-weight:500;color:#2C2C2A;background:#fff;outline:none;text-align:right;font-family:inherit}
+.edit-input:focus{border-color:#378ADD}
+.action-btn{display:flex;align-items:flex-start;gap:10px;width:100%;padding:10px 11px;margin-bottom:8px;border-radius:8px;border:1.5px solid #D3D1C7;background:var(--color-background-primary);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
+.action-btn:last-child{margin-bottom:0}
+.action-btn:hover{border-color:#888780;background:#F1EFE8}
+.action-btn.primary{border-color:#85B7EB;background:#E6F1FB}
+.action-btn.primary:hover{border-color:#378ADD;background:#D4E9F7}
+.action-letter{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;margin-top:1px}
+.al-a{background:#E6F1FB;color:#0C447C;border:1px solid #85B7EB}
+.al-b{background:#F1EFE8;color:#444441;border:1px solid #D3D1C7}
+.action-text{flex:1}
+.action-title{font-size:12px;font-weight:500;color:#2C2C2A;margin-bottom:2px}
+.action-desc{font-size:11px;color:#5F5E5A;line-height:1.4}
+.scope-fork{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:9px 11px;font-size:11px;color:#633806;margin-bottom:12px}
+.empty-state{text-align:center;padding:36px 20px;color:#888780;width:100%}
+.empty-title{font-size:13px;font-weight:500;color:#5F5E5A;margin-bottom:6px}
+.empty-body{font-size:12px;color:#888780;line-height:1.6}
+.empty-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;opacity:.3}
+.ghost-btn{padding:6px 14px;border-radius:6px;border:1.5px solid #D3D1C7;background:none;cursor:pointer;font-size:11px;color:#5F5E5A;margin-top:12px}
+.ghost-btn:hover{background:#F1EFE8;border-color:#888780;color:#2C2C2A}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.metric{background:#F1EFE8;border:1.5px solid #D3D1C7;border-radius:8px;padding:10px;text-align:center}
+.metric .ml{font-size:10px;color:#5F5E5A;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.metric .mv{font-size:20px;font-weight:500;color:#2C2C2A}
+.metric .md{font-size:10px;margin-top:2px}
+.md-up{color:#3B6D11}
+.queue-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;background:var(--color-background-primary);border:1.5px solid #D3D1C7;margin-bottom:6px;font-size:12px}
 .queue-item.incoming{border-color:#378ADD;background:#E6F1FB}
-.q-avatar{
-  width:30px;height:30px;border-radius:50%;
-  background:#E6F1FB;border:1px solid #85B7EB;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:500;color:#0C447C;flex-shrink:0
-}
+.q-avatar{width:30px;height:30px;border-radius:50%;background:#E6F1FB;border:1px solid #85B7EB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#0C447C;flex-shrink:0}
 .q-name{font-weight:500;font-size:12px;color:#2C2C2A}
 .q-sub{color:#5F5E5A;font-size:11px}
 .q-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;border:1px solid}
 .qb-new{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
 .qb-wait{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
 
-.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.metric{
-  background:#F1EFE8;border:1.5px solid #D3D1C7;
-  border-radius:8px;padding:10px;text-align:center
+/* ── Phone — fixed size always ── */
+.phone-col{flex-shrink:0;width:200px}
+.phone-device{
+  width:200px;height:420px;
+  background:#1C1C1E;border-radius:36px;
+  padding:0 8px 10px;
+  border:1.5px solid #3A3A3C;
+  position:relative;
+  display:flex;flex-direction:column;
 }
-.metric .ml{font-size:10px;color:#5F5E5A;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
-.metric .mv{font-size:20px;font-weight:500;color:#2C2C2A}
-.metric .md{font-size:10px;margin-top:2px}
-.md-up{color:#3B6D11}
-.md-down{color:#A32D2D}
-
-.scope-fork{
-  border:1.5px solid #EF9F27;border-radius:8px;
-  background:#FAEEDA;padding:9px 11px;
-  font-size:11px;color:#633806;margin-bottom:12px
+.phone-btn-l1{position:absolute;left:-4px;top:72px;width:3px;height:26px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.phone-btn-l2{position:absolute;left:-4px;top:108px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.phone-btn-l3{position:absolute;left:-4px;top:162px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.phone-btn-r{position:absolute;right:-4px;top:100px;width:3px;height:60px;background:#3A3A3C;border-radius:0 2px 2px 0}
+.phone-notch{width:80px;height:22px;background:#1C1C1E;border-radius:0 0 14px 14px;margin:0 auto 0;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:6px;z-index:2}
+.notch-cam{width:7px;height:7px;border-radius:50%;background:#2C2C2E;border:1px solid #3A3A3C}
+.notch-spk{width:36px;height:4px;border-radius:2px;background:#2C2C2E}
+.phone-screen-inner{
+  flex:1;
+  background:#000;border-radius:0 0 28px 28px;
+  overflow:hidden;display:flex;flex-direction:column;
 }
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 14px 2px;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
+.status-icons{display:flex;align-items:center;gap:3px}
+.screen-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.home-bar{height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.home-ind{width:70px;height:3px;background:#444;border-radius:2px}
 
-.version-a{border:1.5px solid #EF9F27;border-radius:8px;padding:10px 12px;background:#FAEEDA}
-.version-b{border:1.5px solid #D3D1C7;border-radius:8px;padding:10px 12px}
-.version-label{font-size:10px;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
-.vl-a{color:#854F0B}
-.vl-b{color:#5F5E5A}
+/* waveform */
+.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:18px}
+.wbar{width:3px;border-radius:2px;background:rgba(255,255,255,.6);animation:wv .8s ease-in-out infinite}
+.wbar:nth-child(1){height:6px}.wbar:nth-child(2){height:11px;animation-delay:.1s}.wbar:nth-child(3){height:16px;animation-delay:.2s}.wbar:nth-child(4){height:8px;animation-delay:.3s}.wbar:nth-child(5){height:13px;animation-delay:.4s}
+@keyframes wv{0%,100%{opacity:.4;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
 
-.empty-state{
-  text-align:center;padding:36px 20px;color:#888780
-}
-.empty-dash{font-size:28px;opacity:.3;margin-bottom:10px}
-.empty-title{font-size:13px;font-weight:500;color:#5F5E5A;margin-bottom:6px}
-.empty-body{font-size:12px;color:#888780;line-height:1.6}
-.empty-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;opacity:.3}
+/* hold ring */
+.hold-pulse{width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;animation:hpulse 2s ease-in-out infinite}
+@keyframes hpulse{0%,100%{border-color:rgba(255,255,255,.1)}50%{border-color:rgba(55,138,221,.6)}}
 
-.ghost-btn{
-  padding:6px 14px;border-radius:6px;
-  border:1.5px solid #D3D1C7;background:none;
-  cursor:pointer;font-size:11px;color:#5F5E5A;
-  margin-top:12px
-}
-.ghost-btn:hover{background:#F1EFE8;border-color:#888780;color:#2C2C2A}
+/* call action grid */
+.call-action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}
+.call-action{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cab{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cab svg{fill:rgba(255,255,255,.75);width:16px;height:16px}
+.cal{font-size:10px;color:rgba(255,255,255,.4);text-align:center}
+.end-btn{width:50px;height:50px;border-radius:50%;background:#D9534F;display:flex;align-items:center;justify-content:center;margin:0 auto;cursor:pointer}
+.end-btn svg{fill:#fff;width:20px;height:20px;transform:rotate(135deg)}
+.call-avatar-lg{width:60px;height:60px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#fff;border:2px solid rgba(255,255,255,.15)}
+.success-circle{width:52px;height:52px;border-radius:50%;background:rgba(58,155,58,.2);border:2px solid #3A9B3A;display:flex;align-items:center;justify-content:center}
+.success-circle svg{stroke:#3A9B3A;fill:none;stroke-width:2;width:22px;height:22px}
 
-.highlight{background:#EAF3DE;border:1px solid #97C459;border-radius:6px;padding:7px 10px;font-size:11px;color:#27500A;margin-top:8px}
-.transcript{font-size:11px;color:#5F5E5A;margin-top:8px;font-style:italic;line-height:1.5}
-
-.timeline-wrap{
-  padding:14px 20px 14px;
-  border-top:1.5px solid #888780;
-  background:#F1EFE8
-}
-.phase-labels{display:flex;margin-bottom:6px}
-.phase-lbl{flex:1;font-size:10px;color:#888780;text-align:center;padding:0 2px}
-.phase-lbl.cur{color:#2C2C2A;font-weight:500}
-.scrubber-row{display:flex;align-items:center;gap:10px}
-.scrubber-row input[type=range]{flex:1}
-.phase-name-out{font-size:11px;font-weight:500;color:#2C2C2A;min-width:82px;text-align:right}
-.play-btn{
-  width:28px;height:28px;border-radius:50%;
-  border:1.5px solid #888780;background:#fff;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0
-}
+/* timeline */
+.timeline-wrap{padding:14px 20px 16px;border-top:1.5px solid #888780;background:#F1EFE8}
+.timeline-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.play-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid #888780;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .play-btn svg{width:10px;height:10px;fill:#2C2C2A}
+.tl-track{flex:1;position:relative;height:28px;display:flex;align-items:center}
+.tl-line{position:absolute;left:0;right:0;height:3px;background:#D3D1C7;border-radius:2px}
+.tl-fill{position:absolute;left:0;height:3px;background:#2C2C2A;border-radius:2px;transition:width .2s}
+.tl-dots{position:absolute;left:0;right:0;display:flex;justify-content:space-between}
+.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid #888780;background:#F1EFE8;cursor:pointer;transition:all .15s;flex-shrink:0}
+.tl-dot.done{background:#2C2C2A;border-color:#2C2C2A}
+.tl-dot.active{background:#fff;border-color:#2C2C2A;border-width:2.5px;box-shadow:0 0 0 3px rgba(44,44,42,.15)}
+.tl-dot:hover{border-color:#2C2C2A;transform:scale(1.25)}
+.tl-labels{display:flex;justify-content:space-between}
+.tl-label{font-size:10px;color:#888780;text-align:center;cursor:pointer;padding:2px 4px;border-radius:4px;transition:all .15s;line-height:1.3;flex:1}
+.tl-label:hover{color:#2C2C2A;background:#D3D1C7}
+.tl-label.active{color:#2C2C2A;font-weight:600}
 </style>
 
-<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Interactive stakeholder prototype with five character views and a shared call timeline scrubber</h2>
-
 <div class="proto">
-
   <div class="char-bar">
     <button class="char-btn active" onclick="sw('margaret',this)">Margaret<span class="role">Caller</span></button>
     <button class="char-btn" onclick="sw('raymond',this)">Raymond<span class="role">Branch banker</span></button>
     <button class="char-btn" onclick="sw('specialist',this)">Specialist<span class="role">Call center</span></button>
-    <button class="char-btn" onclick="sw('system',this)">System<span class="role">AI / data</span></button>
     <button class="char-btn" onclick="sw('asif',this)">Asif<span class="role">Ops manager</span></button>
   </div>
-
   <div class="view-area">
     <div class="view active" id="v-margaret"></div>
     <div class="view" id="v-raymond"></div>
     <div class="view" id="v-specialist"></div>
-    <div class="view" id="v-system"></div>
     <div class="view" id="v-asif"></div>
   </div>
-
   <div class="timeline-wrap">
-    <div class="phase-labels" id="plabels"></div>
-    <div class="scrubber-row">
+    <div class="timeline-top">
       <button class="play-btn" id="playbtn" onclick="togglePlay()">
         <svg id="playicon" viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
       </button>
-      <input type="range" min="0" max="5" step="1" value="0" id="scrubber" oninput="setPhase(+this.value)">
-      <span class="phase-name-out" id="pname">Trigger</span>
+      <div class="tl-track">
+        <div class="tl-line"></div>
+        <div class="tl-fill" id="tl-fill"></div>
+        <div class="tl-dots" id="tl-dots"></div>
+      </div>
     </div>
+    <div class="tl-labels" id="tl-labels"></div>
   </div>
-
 </div>
 
 <script>
 const PHASES=['Trigger','AI intercept','Routing','Handoff','Resolution','Wrap-up'];
-const CHARS=['margaret','raymond','specialist','system','asif'];
-let cur='margaret', phase=0, playing=false, timer=null;
+const CHARS=['margaret','raymond','specialist','asif'];
+let cur='margaret',phase=0,playing=false,timer=null;
+let summaryEditing=false;
+let summaryData={name:'Margaret Hooper',account:'••4421 (checking)',branch:'Midtown East',since:'2011',issue:'Dispute — $247 AMZN',risk:'74 / high'};
 
 function sw(c,btn){
   cur=c;
@@ -315,380 +188,217 @@ function sw(c,btn){
   btn.classList.add('active');
   render();
 }
-
-function setPhase(p){
-  phase=p;
-  document.getElementById('scrubber').value=p;
-  document.getElementById('pname').textContent=PHASES[p];
-  document.querySelectorAll('.phase-lbl').forEach((el,i)=>el.classList.toggle('cur',i===p));
-  render();
+function setPhase(p){phase=p;summaryEditing=false;updateTimeline();render();}
+function updateTimeline(){
+  const pct=phase===0?0:(phase/(PHASES.length-1)*100);
+  document.getElementById('tl-fill').style.width=pct+'%';
+  document.querySelectorAll('.tl-dot').forEach((d,i)=>{d.classList.remove('done','active');if(i<phase)d.classList.add('done');else if(i===phase)d.classList.add('active');});
+  document.querySelectorAll('.tl-label').forEach((l,i)=>l.classList.toggle('active',i===phase));
 }
-
+function buildTimeline(){
+  document.getElementById('tl-dots').innerHTML=PHASES.map((_,i)=>`<div class="tl-dot${i===0?' active':''}" onclick="setPhase(${i})"></div>`).join('');
+  document.getElementById('tl-labels').innerHTML=PHASES.map((ph,i)=>`<div class="tl-label${i===0?' active':''}" onclick="setPhase(${i})">${ph}</div>`).join('');
+}
 function togglePlay(){
   playing=!playing;
-  document.getElementById('playicon').innerHTML=playing
-    ?'<rect x="1.5" y="1" width="3" height="8"/><rect x="5.5" y="1" width="3" height="8"/>'
-    :'<polygon points="2,1 9,5 2,9"/>';
-  if(playing) autoPlay(); else clearTimeout(timer);
+  document.getElementById('playicon').innerHTML=playing?'<rect x="1.5" y="1" width="3" height="8"/><rect x="5.5" y="1" width="3" height="8"/>':'<polygon points="2,1 9,5 2,9"/>';
+  if(playing)autoPlay();else clearTimeout(timer);
 }
-
-function autoPlay(){
-  if(!playing)return;
-  setPhase((phase+1)%PHASES.length);
-  timer=setTimeout(autoPlay,2200);
-}
+function autoPlay(){if(!playing)return;setPhase((phase+1)%PHASES.length);timer=setTimeout(autoPlay,2200);}
 
 function b(txt,type){return`<span class="phase-badge badge-${type}">${txt}</span>`}
+function render(){rMargaret();rRaymond();rSpecialist();rAsif();}
 
-function render(){
-  rMargaret(); rRaymond(); rSpecialist(); rSystem(); rAsif();
+/* status bar svg icons — fixed size always */
+const statusIcons=`
+  <svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><rect x="0" y="5" width="2" height="6" rx="1"/><rect x="3" y="3" width="2" height="8" rx="1"/><rect x="6" y="1" width="2" height="10" rx="1"/><rect x="9" y="0" width="2" height="11" rx="1"/></svg>
+  <svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.6 4.6L11.4 5.8C10.3 4.5 8.8 3.7 7 3.7S3.7 4.5 2.6 5.8L1.4 4.6C2.8 3 4.8 2 7 2zM7 5.5c1.4 0 2.5.6 3.3 1.5L9.1 8.1C8.5 7.4 7.8 7 7 7s-1.5.4-2.1 1.1L3.7 7c.8-.9 1.9-1.5 3.3-1.5zM7 9a1.5 1.5 0 110 3A1.5 1.5 0 017 9z"/></svg>
+  <svg width="22" height="10" viewBox="0 0 22 11" fill="none"><rect x=".5" y="1" width="18" height="9" rx="2" stroke="#fff" stroke-width="1"/><rect x="2" y="2.5" width="12" height="6" rx="1" fill="#fff"/><path d="M20 3.5v4c1-.7 1-3.3 0-4z" fill="#fff"/></svg>`;
+
+/* phone frame wrapper — FIXED 200×420 always */
+function phone(bodyHTML){
+  return`<div class="phone-col">
+    <div class="phone-device">
+      <div class="phone-btn-l1"></div><div class="phone-btn-l2"></div><div class="phone-btn-l3"></div><div class="phone-btn-r"></div>
+      <div class="phone-notch"><div class="notch-cam"></div><div class="notch-spk"></div></div>
+      <div class="phone-screen-inner">
+        <div class="status-bar"><span>9:41</span><div class="status-icons">${statusIcons}</div></div>
+        <div class="screen-body">${bodyHTML}</div>
+        <div class="home-bar"><div class="home-ind"></div></div>
+      </div>
+    </div>
+  </div>`;
 }
 
+/* call controls reused across phases */
+const callControls=`<div class="call-action-grid">
+  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24"><path d="M15.5 8.5a5 5 0 010 7M12 6a8 8 0 010 12" stroke="rgba(255,255,255,.8)" fill="none" stroke-width="1.8"/></svg></div><div class="cal">speaker</div></div>
+  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M17 11c0 2.8-2.2 5-5 5s-5-2.2-5-5V5c0-2.8 2.2-5 5-5s5 2.2 5 5v6zm-5 7c3.9 0 7-3.1 7-7h-2c0 2.8-2.2 5-5 5s-5-2.2-5-5H5c0 3.9 3.1 7 7 7zm-1 3h2v-2h-2v2z"/></svg></div><div class="cal">mute</div></div>
+  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M3 3h7v2H5v4H3V3zm11 0h7v6h-2V5h-5V3zM3 13h2v4h5v2H3v-6zm16 4h-5v2h7v-6h-2v4z"/></svg></div><div class="cal">keypad</div></div>
+</div>
+<div class="end-btn" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="white"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg></div>`;
+
+/* ── Margaret ── */
 function rMargaret(){
-  const el=document.getElementById('v-margaret');
-  const p=phase;
-  let h='';
+  const el=document.getElementById('v-margaret'); const p=phase;
+  let body='', note='', badgeType='gray';
+
   if(p===0){
-    h=b('Phase 1 — trigger','gray')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div style="font-size:10px;color:#5F5E5A;margin-bottom:6px">Statement alert</div>
-          <div class="charge-box">
-            <div class="ctitle">Suspicious charge</div>
-            <div class="camount">$247.00</div>
-            <div class="csub">AMZN*MKTP &middot; Apr 27</div>
-          </div>
-          <button class="call-btn">Call branch</button>
+    badgeType='gray';
+    body=`<div style="background:linear-gradient(160deg,#0C447C,#185FA5);padding:14px 12px 10px;flex-shrink:0">
+      <div style="font-size:10px;color:rgba(255,255,255,.55);margin-bottom:1px">Chase Bank</div>
+      <div style="font-size:13px;font-weight:500;color:#fff">Checking ••4421</div>
+      <div style="font-size:22px;font-weight:300;color:#fff;margin:6px 0 2px">$3,842.50</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.45)">Available balance</div>
+    </div>
+    <div style="flex:1;padding:10px 12px;overflow:hidden">
+      <div style="font-size:10px;font-weight:500;color:rgba(255,255,255,.35);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase">Recent</div>
+      <div style="background:rgba(229,75,74,.15);border:1px solid rgba(229,75,74,.35);border-radius:9px;padding:8px 10px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><div style="font-size:11px;font-weight:500;color:#fff">AMZN*MKTP</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:1px">Apr 27 &middot; Card</div></div>
+          <div style="text-align:right"><div style="font-size:12px;font-weight:500;color:#F09595">-$247.00</div><div style="font-size:10px;color:rgba(229,75,74,.8);margin-top:1px">Not recognised?</div></div>
         </div>
       </div>
-      <div class="side-note">
-        <div class="title">What Margaret sees</div>
-        <div class="body">Her bank statement shows an unfamiliar $247 charge. She decides to call her branch — not a 1-800 number — because she has a relationship there.</div>
-        <div class="foot">Surface: phone / laptop screen<br>Experience: visual, self-directed</div>
-      </div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.07)"><div><div style="font-size:11px;color:#fff">Trader Joe's</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 26</div></div><div style="font-size:11px;color:rgba(255,255,255,.6)">-$54.20</div></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0"><div><div style="font-size:11px;color:#fff">Direct deposit</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 25</div></div><div style="font-size:11px;color:#3A9B3A">+$2,400.00</div></div>
+      <button style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:#185FA5;border:none;color:#fff;font-size:11px;font-weight:500;cursor:pointer">Call branch about this charge</button>
     </div>`;
-  } else if(p===1){
-    h=b('Phase 2 — AI intercept','blue')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="phone-avatar">MH</div>
-          <div class="phone-name">Branch line</div>
-          <div class="phone-sub">Connected &middot; 0:12</div>
-          <div class="waveform">
-            <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
-          </div>
-          <div style="font-size:10px;color:#5F5E5A;text-align:center;padding:0 2px">"I noticed a charge I don't recognise from Amazon for $247…"</div>
-        </div>
-      </div>
-      <div class="side-note">
-        <div class="title">What Margaret hears</div>
-        <div class="body">An AI greets her, asks consent to record, and listens. No menu tree. She explains in her own words. AI confirms understanding and says it's connecting her.</div>
-        <div class="foot">Surface: audio only — no screen<br>Key moment: frictionless explanation</div>
-      </div>
-    </div>`;
-  } else if(p===2){
-    h=b('Phase 3 — routing','gray')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="hold-ring">
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M4 4h4v6l-2 2a12 12 0 005 5l2-2h6v4a16 16 0 01-15-15z" stroke="#378ADD" stroke-width="1.5"/></svg>
-          </div>
-          <div style="margin-top:10px;font-size:12px;font-weight:500;color:#2C2C2A">Connecting you…</div>
-          <div style="font-size:10px;color:#5F5E5A;margin-top:3px">Estimated wait: &lt;1 min</div>
-          <div class="progress-track"><div class="progress-fill"></div></div>
-        </div>
-      </div>
-      <div class="side-note">
-        <div class="title">What Margaret hears</div>
-        <div class="body">Hold music. Routing is completely invisible to her. Her experience is simply: "I'm being connected."</div>
-        <div class="foot">Surface: audio only<br>Invisible: routing, data lookup, context build</div>
-      </div>
-    </div>`;
-  } else if(p===3){
-    h=b('Phase 4 — handoff','blue')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="phone-avatar">JT</div>
-          <div class="phone-name">James T. — Disputes</div>
-          <div class="phone-sub">Connected &middot; 1:04</div>
-          <div class="waveform">
-            <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
-          </div>
-          <div style="font-size:10px;color:#5F5E5A;text-align:center;padding:0 2px">"Hi Margaret — I see you're calling about the Amazon charge on the 27th."</div>
-        </div>
-      </div>
-      <div class="side-note">
-        <div class="title" style="color:#0C447C">The key moment</div>
-        <div class="body">The specialist already knows her name and the issue. No repeat. This is what Margaret experiences as "magic."</div>
-        <div class="highlight">Margaret does not repeat herself. This is the primary trust signal.</div>
-        <div class="foot" style="margin-top:8px">Surface: audio only</div>
-      </div>
-    </div>`;
-  } else if(p===4){
-    h=b('Phase 5 — resolution','green')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="phone-avatar">JT</div>
-          <div class="phone-name">James T. — Disputes</div>
-          <div class="phone-sub">Connected &middot; 3:22</div>
-          <div class="resolve-box">
-            <div class="rtitle">Dispute filed</div>
-            <div class="rval">Ref #DIS-2024-9912</div>
-            <div class="rsub">Provisional credit: $247.00</div>
-          </div>
-          <div style="font-size:10px;color:#5F5E5A;text-align:center;margin-top:6px">"You'll see the credit within 24 hours."</div>
-        </div>
-      </div>
-      <div class="side-note">
-        <div class="title">Issue resolved</div>
-        <div class="body">Dispute filed. Provisional credit issued. Margaret has a reference number. Total call time well under average handle time.</div>
-        <div class="foot">Surface: audio only<br>Outcome: FCR achieved, no callback needed</div>
-      </div>
-    </div>`;
-  } else {
-    h=b('Phase 6 — wrap-up','gray')+`
-    <div class="phone-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <span class="success-tick">&#10003;</span>
-          <div class="phone-name">Call complete</div>
-          <div class="phone-sub">Duration: 4:07</div>
-          <div class="phone-sub">Ref: DIS-2024-9912</div>
-          <button style="margin-top:10px;width:100%;padding:6px;border-radius:8px;border:1.5px solid #D3D1C7;background:none;font-size:10px;cursor:pointer;color:#5F5E5A">Rate this call</button>
-        </div>
-      </div>
-      <div class="side-note">
-        <div class="title">Margaret's experience ends here</div>
-        <div class="body">She called her branch, spoke to someone who already knew her problem, and got it resolved in one call. Her perception: "my branch took care of me."</div>
-        <div class="foot">CSAT driver: no repeat, fast resolution<br>Trust maintained with branch relationship</div>
-      </div>
-    </div>`;
+    note=`<div class="title">What Margaret sees</div><div class="body">Her banking app flags the $247 AMZN charge in red. She taps to call her branch directly — not a 1-800 number.</div><div class="foot">Surface: phone banking app<br>Next: she dials her branch line</div>`;
   }
-  el.innerHTML=h;
+
+  else if(p===1){
+    badgeType='blue';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">calling</div>
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Midtown East Branch</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px">Connecting…</div>
+      <div class="call-avatar-lg" style="background:#2C2C2E;border-color:rgba(255,255,255,.08);margin-bottom:8px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;padding:0 12px;margin-bottom:10px;font-style:italic;line-height:1.5">"Hi, can you tell me what's going on?"</div>
+      <div class="waveform"></div>
+      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
+    </div>`;
+    note=`<div class="title">What Margaret hears</div><div class="body">An AI greets her naturally — no menu tree. She explains the charge in her own words. The AI confirms it understood.</div><div class="foot">Surface: audio only<br>Key moment: no IVR, no prompts</div>`;
+  }
+
+  else if(p===2){
+    badgeType='gray';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">on hold</div>
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Midtown East Branch</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:14px">0:42</div>
+      <div class="hold-pulse" style="margin-bottom:10px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg>
+      </div>
+      <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Connecting you…</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center">Finding the right specialist</div>
+      <div style="width:100px;height:2px;background:rgba(255,255,255,.1);border-radius:1px;margin-top:10px"><div style="width:65%;height:100%;background:rgba(255,255,255,.4);border-radius:1px"></div></div>
+      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
+    </div>`;
+    note=`<div class="title">What Margaret hears</div><div class="body">Hold music. Routing is completely invisible. The context object is being built behind the scenes.</div><div class="foot">Surface: audio only<br>Invisible: routing, lookup, context build</div>`;
+  }
+
+  else if(p===3){
+    badgeType='blue';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">connected</div>
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">James T. — Disputes</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px">1:04</div>
+      <div class="call-avatar-lg" style="margin-bottom:8px">JT</div>
+      <div class="waveform" style="margin-bottom:8px"></div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;padding:0 10px;font-style:italic;line-height:1.5">"Hi Margaret — I see you're calling about the Amazon charge on the 27th."</div>
+      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
+    </div>`;
+    note=`<div class="title" style="color:#0C447C">The key moment</div><div class="body">James already knows her name and the exact charge. Margaret does not repeat herself once.</div><div class="highlight">No repeat. This is the primary trust signal.</div><div class="foot" style="margin-top:8px">Surface: audio only</div>`;
+  }
+
+  else if(p===4){
+    badgeType='green';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px">
+      <div class="success-circle" style="margin-bottom:10px"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg></div>
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Dispute filed</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Ref #DIS-2024-9912</div>
+      <div style="background:rgba(58,155,58,.15);border:1px solid rgba(58,155,58,.3);border-radius:10px;padding:10px 12px;width:100%">
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Amount</span><span style="color:#fff;font-weight:500">$247.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Credit</span><span style="color:#3A9B3A;font-weight:500">+$247.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Timeline</span><span style="color:#fff;font-weight:500">3–5 days</span></div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px;font-style:italic">"You'll see the credit within 24 hours."</div>
+    </div>`;
+    note=`<div class="title">Issue resolved</div><div class="body">Dispute filed, provisional credit issued. Margaret has a reference number and the call is nearly done.</div><div class="foot">Outcome: FCR achieved, no callback needed</div>`;
+  }
+
+  else{
+    badgeType='gray';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px">
+      <div class="success-circle" style="margin-bottom:10px"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg></div>
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Call complete</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Duration: 4:07</div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px;width:100%">
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Ref</span><span style="color:#fff;font-weight:500">DIS-2024-9912</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Specialist</span><span style="color:#fff;font-weight:500">James T.</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Branch</span><span style="color:#fff;font-weight:500">Midtown East</span></div>
+      </div>
+      <button style="margin-top:12px;width:100%;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-size:11px;cursor:pointer">Rate this call ★</button>
+    </div>`;
+    note=`<div class="title">Margaret's experience ends here</div><div class="body">She called her branch, spoke to someone who already knew her problem, resolved in one call. Her perception: "my branch took care of me."</div><div class="foot">CSAT driver: no repeat, fast resolution</div>`;
+  }
+
+  el.innerHTML=`${phone(body)}<div class="side-note">${b('Phase '+(phase+1)+' — '+PHASES[phase],badgeType)}${note}</div>`;
 }
 
+/* ── Edit helpers ── */
+function toggleEdit(){
+  if(!summaryEditing){summaryEditing=true;}
+  else{['name','account','branch','since','issue','risk'].forEach(f=>{const e=document.getElementById('si-'+f);if(e)summaryData[f]=e.value;});summaryEditing=false;}
+  rRaymond();
+}
+function cancelEdit(){summaryEditing=false;rRaymond();}
+function buildSummaryCard(withData){
+  const eIco=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8.5 1.5l2 2-6 6H2.5v-2l6-6z"/></svg>`;
+  const sIco=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,6 5,9 10,3"/></svg>`;
+  if(!withData)return`<div class="card"><h4>Summary — Caller</h4><div style="font-size:12px;color:#888780;padding:6px 0">No active call.</div></div>`;
+  const labels={name:'Name',account:'Account',branch:'Branch',since:'Customer since',issue:'Issue',risk:'Risk score'};
+  if(!summaryEditing)return`<div class="card"><h4>Summary — Caller<button class="edit-btn" onclick="toggleEdit()">${eIco} Edit</button></h4>${Object.keys(labels).map(f=>`<div class="card-row"><span class="lbl">${labels[f]}</span><span class="${f==='issue'||f==='risk'?'val-flag':'val'}">${summaryData[f]}</span></div>`).join('')}</div>`;
+  return`<div class="card"><h4>Summary — Caller<div style="display:flex;gap:5px"><button class="edit-btn saving" onclick="toggleEdit()">${sIco} Save</button><button class="edit-btn" onclick="cancelEdit()" style="color:#791F1F;border-color:#F09595;background:#FCEBEB">✕</button></div></h4>${Object.keys(labels).map(f=>`<div class="card-row"><span class="lbl">${labels[f]}</span><input class="edit-input" id="si-${f}" value="${summaryData[f]}"/></div>`).join('')}</div>`;
+}
+
+/* ── Raymond ── */
 function rRaymond(){
-  const el=document.getElementById('v-raymond');
-  const p=phase;
+  const el=document.getElementById('v-raymond'); const p=phase;
+  const a0=`<div class="card"><h4>Actions</h4><div style="font-size:12px;color:#888780;padding:6px 0">Actions appear once a call is intercepted.</div></div>`;
+  const a1=`<div class="card"><h4>Actions</h4><button class="action-btn primary"><span class="action-letter al-a">A</span><div class="action-text"><div class="action-title">Handle the call yourself</div><div class="action-desc">Best for simple balance or account questions.</div></div></button><button class="action-btn"><span class="action-letter al-b">B</span><div class="action-text"><div class="action-title">Route to specialist</div><div class="action-desc">Transfer with full context — no repeat for customer.</div></div></button></div>`;
+  const a2=`<div class="card"><h4>Actions</h4><button class="action-btn primary"><span class="action-letter al-a">A</span><div class="action-text"><div class="action-title">Resolve the dispute</div><div class="action-desc">File and issue provisional credit from this screen.</div></div></button><button class="action-btn"><span class="action-letter al-b">B</span><div class="action-text"><div class="action-title">Direct to disputes specialist</div><div class="action-desc">Risk score 74 — recommended for this call.</div></div></button></div>`;
+  const ar=`<div class="card"><h4>Actions</h4><div style="background:#EAF3DE;border:1px solid #97C459;border-radius:8px;padding:8px 10px;font-size:12px;color:#27500A;margin-bottom:6px">&#10003; Routed to specialist</div><div style="font-size:11px;color:#5F5E5A">Raymond returned to walk-in customers.</div></div>`;
   let h='';
-  if(p===0){
-    h=b('Phase 1 — not yet in scope','gray')+`
-    <div class="scope-fork">Open scope question: your team hasn't fully decided whether Raymond is in the loop at all. In version A (AI routes direct to specialist), his lane is mostly empty. In version B (AI routes to Raymond first), he sees everything from phase 2.</div>
-    <div class="two-col">
-      <div class="card"><h4>Queue</h4><div style="font-size:12px;color:#5F5E5A">2 walk-in customers being served. Branch line quiet.</div></div>
-      <div class="card"><h4>Status</h4><div style="font-size:12px;color:#5F5E5A">Available. No incoming calls yet.</div></div>
-    </div>`;
-  } else if(p===1){
-    h=b('Phase 2 — AI intercepts first','amber')+`
-    <div class="scope-fork">In both versions: the branch line rings, but the AI answers before Raymond picks up.</div>
-    <div class="two-col">
-      <div class="card"><h4>Branch call log</h4><div class="alert-bar" style="margin:0"><div class="alert-dot"></div>Incoming call intercepted by AI</div></div>
-      <div class="card"><h4>Raymond's screen</h4><div style="font-size:12px;color:#5F5E5A">Version A: nothing changes.<br><br>Version B: a notification appears.</div></div>
-    </div>`;
-  } else if(p===2){
-    h=b('Phase 3 — scope fork','amber')+`
-    <div class="scope-fork">This is the unresolved decision. Which version did your team land on?</div>
-    <div class="two-col">
-      <div class="version-a"><div class="version-label vl-a">Version A (current plan)</div><div style="font-size:12px;color:#633806">AI classifies as "dispute." Routes direct to specialist. Raymond's lane ends here.</div></div>
-      <div class="version-b"><div class="version-label vl-b">Version B (banker in loop)</div><div style="font-size:12px;color:#444441">Raymond sees context card. Can accept or escalate with one click. Returns to walk-in faster.</div></div>
-    </div>`;
-  } else {
-    h=b('Phase '+(p+1)+' — not in scope (version A)','gray')+`
-    <div class="empty-state">
-      <div class="empty-dash">&#8212;</div>
-      <div class="empty-title">Raymond is not in this phase</div>
-      <div class="empty-body">In version A, the call was routed directly to the specialist in phase 2. Raymond returned to serving walk-in customers.</div>
-      <button class="ghost-btn" onclick="sendPrompt('What would Raymond\\'s full journey look like in version B where he is in the loop?')">Explore version B ↗</button>
-    </div>`;
-  }
-  el.innerHTML=h;
+  if(p===0)h=b('Phase 1 — no active call','gray')+`<div class="two-col">${buildSummaryCard(false)}${a0}</div>`;
+  else if(p===1)h=b('Phase 2 — AI intercepts','amber')+`<div class="scope-fork">AI intercepted the branch line. Raymond can review, edit the summary, and choose next action.</div><div class="two-col">${buildSummaryCard(true)}${a1}</div>`;
+  else if(p===2)h=b('Phase 3 — intent classified','blue')+`<div class="alert-bar"><div class="alert-dot"></div>Dispute confirmed &middot; Risk 74 &middot; Specialist recommended</div><div class="two-col">${buildSummaryCard(true)}${a2}</div>`;
+  else if(p===3)h=b('Phase 4 — routed to specialist','green')+`<div class="two-col">${buildSummaryCard(true)}${ar}</div>`;
+  else h=b('Phase '+(p+1)+' — not in scope','gray')+`<div class="empty-state"><div class="empty-title">Raymond is not in this phase</div><div class="empty-body">Returned to walk-in customers after routing.</div></div>`;
+  el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
+/* ── Specialist ── */
 function rSpecialist(){
-  const el=document.getElementById('v-specialist');
-  const p=phase;
-  let h='';
-  if(p<=1){
-    h=b('Phase '+(p+1)+' — not yet in scope','gray')+`
-    <div class="empty-state">
-      <div class="empty-title">Specialist is in queue, waiting</div>
-      <div class="queue-item" style="max-width:270px;margin:14px auto 0">
-        <div class="q-avatar">JT</div>
-        <div style="flex:1"><div class="q-name">James T.</div><div class="q-sub">Disputes &middot; Available</div></div>
-        <span class="q-badge qb-wait">Idle</span>
-      </div>
-    </div>`;
-  } else if(p===2){
-    h=b('Phase 3 — incoming preview','blue')+`
-    <div class="alert-bar"><div class="alert-dot"></div>Incoming call — preview available before you accept</div>
-    <div class="queue-item incoming" style="margin-bottom:12px">
-      <div class="q-avatar">MH</div>
-      <div style="flex:1"><div class="q-name">Margaret H. — Account ••4421</div><div class="q-sub">Intent: card dispute &middot; Routed from branch line</div></div>
-      <span class="q-badge qb-new">New</span>
-    </div>
-    <div class="two-col">
-      <div class="card"><h4>Context preview</h4>
-        <div class="card-row"><span class="lbl">Customer since</span><span class="val">2011</span></div>
-        <div class="card-row"><span class="lbl">Intent</span><span class="val">Dispute — card</span></div>
-        <div class="card-row"><span class="lbl">Amount</span><span class="val-flag">$247.00</span></div>
-        <div class="card-row"><span class="lbl">Merchant</span><span class="val">AMZN*MKTP</span></div>
-      </div>
-      <div class="card"><h4>Fraud signals</h4>
-        <div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">0 in 12mo</span></div>
-        <div class="card-row"><span class="lbl">Location match</span><span class="val-flag">No</span></div>
-        <div class="card-row"><span class="lbl">Device</span><span class="val">New</span></div>
-        <div class="card-row"><span class="lbl">Risk score</span><span class="val-flag">74 / high</span></div>
-      </div>
-    </div>
-    <div class="missing-bar">Missing in current prototype: this pre-accept preview moment</div>`;
-  } else if(p===3){
-    h=b('Phase 4 — desktop pre-populated','blue')+`
-    <div class="alert-bar green"><div class="alert-dot g"></div>Call connected — context loaded &middot; Opening with informed greeting</div>
-    <div class="two-col">
-      <div class="card"><h4>Customer</h4>
-        <div class="card-row"><span class="lbl">Name</span><span class="val">Margaret Hooper</span></div>
-        <div class="card-row"><span class="lbl">Account</span><span class="val">••4421 (checking)</span></div>
-        <div class="card-row"><span class="lbl">Branch</span><span class="val">Midtown East</span></div>
-        <div class="card-row"><span class="lbl">Since</span><span class="val">2011</span></div>
-      </div>
-      <div class="card"><h4>Dispute context</h4>
-        <div class="card-row"><span class="lbl">Charge</span><span class="val-flag">$247 &middot; AMZN</span></div>
-        <div class="card-row"><span class="lbl">Date</span><span class="val">Apr 27</span></div>
-        <div class="card-row"><span class="lbl">Risk</span><span class="val-flag">High (74)</span></div>
-        <div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">None</span></div>
-      </div>
-    </div>
-    <div class="transcript">AI summary: "Customer noticed $247 Amazon charge she did not make. Concerned about account security. No prior disputes on record."</div>`;
-  } else if(p===4){
-    h=b('Phase 5 — resolution in progress','green')+`
-    <div class="two-col">
-      <div class="card"><h4>Dispute form</h4>
-        <div class="card-row"><span class="lbl">Type</span><span class="val">Unauthorized charge</span></div>
-        <div class="card-row"><span class="lbl">Amount</span><span class="val">$247.00</span></div>
-        <div class="card-row"><span class="lbl">Status</span><span class="val-ok">Filed</span></div>
-        <div class="card-row"><span class="lbl">Ref</span><span class="val">DIS-2024-9912</span></div>
-      </div>
-      <div class="card"><h4>Actions taken</h4>
-        <div class="card-row"><span class="lbl">Dispute filed</span><span class="val-ok">Yes</span></div>
-        <div class="card-row"><span class="lbl">Provisional credit</span><span class="val-ok">$247.00</span></div>
-        <div class="card-row"><span class="lbl">Card reissue</span><span class="val">Offered</span></div>
-        <div class="card-row"><span class="lbl">Timeline</span><span class="val">3–5 days</span></div>
-      </div>
-    </div>`;
-  } else {
-    h=b('Phase 6 — wrap-up','amber')+`
-    <div class="missing-bar" style="margin-bottom:12px">Missing in current prototype: wrap-up and notes-back-to-context moment</div>
-    <div class="two-col">
-      <div class="card"><h4>Call summary</h4>
-        <div class="card-row"><span class="lbl">Duration</span><span class="val">4:07</span></div>
-        <div class="card-row"><span class="lbl">Outcome</span><span class="val-ok">Resolved</span></div>
-        <div class="card-row"><span class="lbl">FCR</span><span class="val-ok">Yes</span></div>
-        <div class="card-row"><span class="lbl">Escalated</span><span class="val">No</span></div>
-      </div>
-      <div class="card"><h4>Notes to context</h4>
-        <div style="border:1.5px solid #D3D1C7;border-radius:6px;padding:8px;font-size:11px;color:#5F5E5A;min-height:72px;background:var(--color-background-primary)">Dispute filed for $247 AMZN charge. Provisional credit issued. Customer satisfied…</div>
-        <div style="margin-top:6px;font-size:10px;color:#639922;font-weight:500">Writing back to shared context object</div>
-      </div>
-    </div>`;
-  }
-  el.innerHTML=h;
+  const el=document.getElementById('v-specialist'); const p=phase; let h='';
+  if(p<=1)h=b('Phase '+(p+1)+' — not yet in scope','gray')+`<div class="empty-state"><div class="empty-title">Specialist in queue</div><div class="queue-item" style="max-width:270px;margin:14px auto 0"><div class="q-avatar">JT</div><div style="flex:1"><div class="q-name">James T.</div><div class="q-sub">Disputes &middot; Available</div></div><span class="q-badge qb-wait">Idle</span></div></div>`;
+  else if(p===2)h=b('Phase 3 — incoming preview','blue')+`<div class="alert-bar"><div class="alert-dot"></div>Incoming — preview before you accept</div><div class="queue-item incoming" style="margin-bottom:12px"><div class="q-avatar">MH</div><div style="flex:1"><div class="q-name">Margaret H. — ••4421</div><div class="q-sub">Card dispute &middot; Branch line</div></div><span class="q-badge qb-new">New</span></div><div class="two-col"><div class="card"><h4>Context preview</h4><div class="card-row"><span class="lbl">Since</span><span class="val">2011</span></div><div class="card-row"><span class="lbl">Intent</span><span class="val">Dispute</span></div><div class="card-row"><span class="lbl">Amount</span><span class="val-flag">$247.00</span></div><div class="card-row"><span class="lbl">Merchant</span><span class="val">AMZN</span></div></div><div class="card"><h4>Fraud signals</h4><div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">0 in 12mo</span></div><div class="card-row"><span class="lbl">Location match</span><span class="val-flag">No</span></div><div class="card-row"><span class="lbl">Device</span><span class="val">New</span></div><div class="card-row"><span class="lbl">Risk score</span><span class="val-flag">74 / high</span></div></div></div><div class="missing-bar">Missing in current prototype: this pre-accept preview moment</div>`;
+  else if(p===3)h=b('Phase 4 — desktop pre-populated','blue')+`<div class="alert-bar green"><div class="alert-dot g"></div>Connected — context loaded &middot; Informed greeting</div><div class="two-col"><div class="card"><h4>Customer</h4><div class="card-row"><span class="lbl">Name</span><span class="val">${summaryData.name}</span></div><div class="card-row"><span class="lbl">Account</span><span class="val">${summaryData.account}</span></div><div class="card-row"><span class="lbl">Branch</span><span class="val">${summaryData.branch}</span></div><div class="card-row"><span class="lbl">Since</span><span class="val">${summaryData.since}</span></div></div><div class="card"><h4>Dispute context</h4><div class="card-row"><span class="lbl">Charge</span><span class="val-flag">$247 &middot; AMZN</span></div><div class="card-row"><span class="lbl">Date</span><span class="val">Apr 27</span></div><div class="card-row"><span class="lbl">Risk</span><span class="val-flag">High (74)</span></div><div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">None</span></div></div></div><div class="transcript">AI summary: "Customer noticed $247 Amazon charge she did not make. No prior disputes on record."</div>`;
+  else if(p===4)h=b('Phase 5 — resolution','green')+`<div class="two-col"><div class="card"><h4>Dispute form</h4><div class="card-row"><span class="lbl">Type</span><span class="val">Unauthorized</span></div><div class="card-row"><span class="lbl">Amount</span><span class="val">$247.00</span></div><div class="card-row"><span class="lbl">Status</span><span class="val-ok">Filed</span></div><div class="card-row"><span class="lbl">Ref</span><span class="val">DIS-2024-9912</span></div></div><div class="card"><h4>Actions taken</h4><div class="card-row"><span class="lbl">Dispute filed</span><span class="val-ok">Yes</span></div><div class="card-row"><span class="lbl">Provisional credit</span><span class="val-ok">$247.00</span></div><div class="card-row"><span class="lbl">Card reissue</span><span class="val">Offered</span></div><div class="card-row"><span class="lbl">Timeline</span><span class="val">3–5 days</span></div></div></div>`;
+  else h=b('Phase 6 — wrap-up','amber')+`<div class="missing-bar" style="margin-bottom:12px">Missing: wrap-up and notes-back-to-context</div><div class="two-col"><div class="card"><h4>Call summary</h4><div class="card-row"><span class="lbl">Duration</span><span class="val">4:07</span></div><div class="card-row"><span class="lbl">Outcome</span><span class="val-ok">Resolved</span></div><div class="card-row"><span class="lbl">FCR</span><span class="val-ok">Yes</span></div><div class="card-row"><span class="lbl">Escalated</span><span class="val">No</span></div></div><div class="card"><h4>Notes to context</h4><div style="border:1.5px solid #D3D1C7;border-radius:6px;padding:8px;font-size:11px;color:#5F5E5A;min-height:72px;background:var(--color-background-primary)">Dispute filed, provisional credit issued. Customer satisfied…</div><div style="margin-top:6px;font-size:10px;color:#639922;font-weight:500">Writing back to context object</div></div></div>`;
+  el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
-function rSystem(){
-  const el=document.getElementById('v-system');
-  const p=phase;
-  const nodes=[
-    {l:'STT / transcription', s:[0,1,1,1,1,0], f:[0,80,100,100,100,0]},
-    {l:'Intent classification', s:[0,1,0,0,0,0], f:[0,100,0,0,0,0]},
-    {l:'Customer lookup', s:[0,1,0,0,0,0], f:[0,100,0,0,0,0]},
-    {l:'Pre-check queries', s:[0,0,1,0,0,0], f:[0,0,100,0,0,0]},
-    {l:'Context object', s:[0,0,1,1,1,1], f:[0,0,40,100,100,100]},
-    {l:'Routing engine', s:[0,0,1,0,0,0], f:[0,0,100,0,0,0]},
-    {l:'Handoff signal', s:[0,0,0,1,0,0], f:[0,0,0,100,0,0]},
-    {l:'Analytics store', s:[0,0,0,0,0,1], f:[0,0,0,0,0,100]},
-  ];
-  const ctx=[
-    {k:'customer_id', v:['null','M.Hooper·4421','M.Hooper·4421','M.Hooper·4421','M.Hooper·4421','M.Hooper·4421']},
-    {k:'intent', v:['null','card_dispute','card_dispute','card_dispute','card_dispute','card_dispute']},
-    {k:'amount', v:['null','$247.00','$247.00','$247.00','$247.00','$247.00']},
-    {k:'risk_score', v:['null','null','74','74','74','74']},
-    {k:'routing', v:['null','null','→ specialist','→ specialist','→ specialist','→ specialist']},
-    {k:'call_status', v:['null','transcribing','routing','connected','active','wrapped']},
-    {k:'resolution', v:['null','null','null','null','DIS-2024-9912','DIS-2024-9912']},
-    {k:'notes', v:['null','null','null','null','null','Dispute filed…']},
-  ];
-  let ng='<div class="sys-grid">';
-  nodes.forEach(n=>{
-    const active=n.s[p];
-    ng+=`<div class="sys-node${active?' active':''}">
-      <h5><span class="sdot ${active?'sdot-proc':'sdot-off'}"></span>${n.l}</h5>
-      <p>${active?'running':'idle'}</p>
-      <div class="fill-bar" style="width:${n.f[p]}%"></div>
-    </div>`;
-  });
-  ng+='</div>';
-  let cx='<div class="data-box"><span style="color:#5F5E5A">context_object = {</span><br>';
-  ctx.forEach(f=>{
-    const val=f.v[p];
-    const isNull=val==='null';
-    const isNew=p>0&&f.v[p]!==f.v[p-1]&&!isNull;
-    const cls=isNull?'dv-null':isNew?'dv-pop':'dv';
-    cx+=`&nbsp;&nbsp;<span class="dk">${f.k}</span>: <span class="${cls}">${val}</span><br>`;
-  });
-  cx+='<span style="color:#5F5E5A">}</span></div>';
-  el.innerHTML=b('Phase '+(p+1)+' — '+PHASES[p],'gray')+
-    '<div style="font-size:11px;font-weight:500;color:#5F5E5A;margin-bottom:6px">Active processes</div>'+ng+
-    '<div style="font-size:11px;font-weight:500;color:#5F5E5A;margin:10px 0 6px">Context object state</div>'+cx+
-    '<div style="font-size:10px;color:#888780;margin-top:6px">Orange = populating this phase &middot; Gray = not yet written</div>';
-}
-
+/* ── Asif ── */
 function rAsif(){
-  const el=document.getElementById('v-asif');
-  const p=phase;
-  if(p<5){
-    el.innerHTML=b('Phase '+(p+1)+' — call in progress','gray')+`
-    <div class="empty-state">
-      <div class="empty-title">Asif's dashboard updates after wrap-up</div>
-      <div class="empty-body">He sees aggregate patterns — not live calls.<br>Scrub to phase 6 to see his view.</div>
-      <div class="empty-metrics">
-        <div class="metric"><div class="ml">AHT</div><div class="mv">—</div></div>
-        <div class="metric"><div class="ml">FCR</div><div class="mv">—</div></div>
-        <div class="metric"><div class="ml">CSAT</div><div class="mv">—</div></div>
-      </div>
-    </div>`;
-  } else {
-    el.innerHTML=b('Phase 6 — post-call analytics','green')+`
-    <div class="dash-grid">
-      <div class="metric"><div class="ml">Avg handle time</div><div class="mv">5.1m</div><div class="md md-up">↓ 37% vs baseline</div></div>
-      <div class="metric"><div class="ml">First call res.</div><div class="mv">84%</div><div class="md md-up">↑ 12pts</div></div>
-      <div class="metric"><div class="ml">CSAT delta</div><div class="mv">+18</div><div class="md md-up">vs pre-AI avg</div></div>
-    </div>
-    <div class="two-col">
-      <div class="card"><h4>This week &middot; intent breakdown</h4>
-        <div class="card-row"><span class="lbl">Card dispute</span><span class="val">312 calls</span></div>
-        <div class="card-row"><span class="lbl">Balance inquiry</span><span class="val">204 calls</span></div>
-        <div class="card-row"><span class="lbl">Account unlock</span><span class="val">87 calls</span></div>
-        <div class="card-row"><span class="lbl">Other</span><span class="val">143 calls</span></div>
-      </div>
-      <div class="card"><h4>Flags to investigate</h4>
-        <div style="background:#FCEBEB;border:1px solid #F09595;border-radius:6px;padding:8px 9px;font-size:11px;color:#791F1F;margin-bottom:6px">NVX Digital dispute cluster — 23 calls, same merchant, Apr 26–28</div>
-        <div style="background:#FAEEDA;border:1px solid #EF9F27;border-radius:6px;padding:8px 9px;font-size:11px;color:#633806">Midtown East branch: transfer rate up 8% this week</div>
-      </div>
-    </div>
-    <button class="ghost-btn" onclick="sendPrompt('What metrics should Asif track to measure whether the AI handoff system is working?')">What should Asif track? ↗</button>`;
-  }
+  const el=document.getElementById('v-asif'); const p=phase; let h='';
+  if(p<5)h=b('Phase '+(p+1)+' — call in progress','gray')+`<div class="empty-state"><div class="empty-title">Dashboard updates after wrap-up</div><div class="empty-body">Asif sees aggregate patterns — not live calls.<br>Go to phase 6 to see his view.</div><div class="empty-metrics"><div class="metric"><div class="ml">AHT</div><div class="mv">—</div></div><div class="metric"><div class="ml">FCR</div><div class="mv">—</div></div><div class="metric"><div class="ml">CSAT</div><div class="mv">—</div></div></div></div>`;
+  else h=b('Phase 6 — post-call analytics','green')+`<div class="dash-grid"><div class="metric"><div class="ml">Avg handle time</div><div class="mv">5.1m</div><div class="md md-up">↓ 37% vs baseline</div></div><div class="metric"><div class="ml">First call res.</div><div class="mv">84%</div><div class="md md-up">↑ 12pts</div></div><div class="metric"><div class="ml">CSAT delta</div><div class="mv">+18</div><div class="md md-up">vs pre-AI avg</div></div></div><div class="two-col"><div class="card"><h4>This week</h4><div class="card-row"><span class="lbl">Card dispute</span><span class="val">312</span></div><div class="card-row"><span class="lbl">Balance inquiry</span><span class="val">204</span></div><div class="card-row"><span class="lbl">Account unlock</span><span class="val">87</span></div><div class="card-row"><span class="lbl">Other</span><span class="val">143</span></div></div><div class="card"><h4>Flags</h4><div style="background:#FCEBEB;border:1px solid #F09595;border-radius:6px;padding:8px 9px;font-size:11px;color:#791F1F;margin-bottom:6px">NVX Digital cluster — 23 calls, Apr 26–28</div><div style="background:#FAEEDA;border:1px solid #EF9F27;border-radius:6px;padding:8px 9px;font-size:11px;color:#633806">Midtown East: transfer rate ↑8%</div></div></div><button class="ghost-btn" onclick="sendPrompt('What metrics should Asif track to measure the AI handoff system?')">What should Asif track? ↗</button>`;
+  el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
-function initLabels(){
-  document.getElementById('plabels').innerHTML=
-    PHASES.map((ph,i)=>`<div class="phase-lbl${i===0?' cur':''}">${ph}</div>`).join('');
-}
-
-initLabels();
+buildTimeline();
 render();
 </script>
