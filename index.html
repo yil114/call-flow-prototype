@@ -1,150 +1,147 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chase Lex Ave — Call Flow Prototype</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans,sans-serif);font-size:14px;color:var(--color-text-primary)}
-.proto{border:1.5px solid #888780;border-radius:12px;overflow:hidden;background:var(--color-background-primary)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:#F5F4EF;display:flex;justify-content:center;padding:24px 16px;min-height:100vh}
+.proto{width:100%;max-width:780px;border:1.5px solid #888780;border-radius:12px;overflow:hidden;background:#fff}
 .char-bar{display:flex;border-bottom:1.5px solid #888780;background:#F1EFE8}
 .char-btn{flex:1;padding:10px 4px 8px;font-size:11px;font-weight:500;text-align:center;cursor:pointer;border:none;border-right:1px solid #B4B2A9;background:none;color:#5F5E5A;border-bottom:3px solid transparent;transition:all .15s;line-height:1.3}
 .char-btn:last-child{border-right:none}
 .char-btn .role{font-size:10px;font-weight:400;color:#888780;display:block;margin-top:1px}
-.char-btn.active{color:#2C2C2A;border-bottom-color:#2C2C2A;background:var(--color-background-primary)}
+.char-btn.active{color:#2C2C2A;border-bottom-color:#2C2C2A;background:#fff}
 .char-btn:hover:not(.active){background:#D3D1C7;color:#2C2C2A}
-.view-area{min-height:460px;padding:20px;position:relative}
+.view-area{min-height:460px;padding:20px}
 .view{display:none;width:100%}
 .view.active{display:flex;gap:24px;align-items:flex-start}
-.phase-badge{display:inline-block;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;margin-bottom:14px;letter-spacing:0.04em;border:1px solid transparent}
-.badge-gray{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
-.badge-blue{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
-.badge-green{background:#EAF3DE;color:#27500A;border-color:#97C459}
-.badge-amber{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+/* badges */
+.pb{display:inline-block;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;margin-bottom:14px;letter-spacing:0.04em;border:1px solid transparent}
+.pg{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+.pbl{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.pgr{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.pa{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.pp{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+/* cards */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:var(--color-background-primary);border:1.5px solid #B4B2A9;border-radius:10px;padding:12px}
+.card{background:#fff;border:1.5px solid #B4B2A9;border-radius:10px;padding:12px}
 .card h4{font-size:10px;font-weight:500;color:#5F5E5A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #D3D1C7;display:flex;justify-content:space-between;align-items:center}
-.card-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:0.5px solid #D3D1C7}
-.card-row:last-child{border-bottom:none}
-.lbl{color:#5F5E5A;flex-shrink:0;margin-right:8px}
-.val{font-weight:500;color:#2C2C2A;text-align:right}
-.val-flag{font-weight:500;color:#791F1F;text-align:right}
-.val-ok{font-weight:500;color:#27500A;text-align:right}
-.alert-bar{display:flex;align-items:center;gap:8px;border:1.5px solid #85B7EB;border-radius:8px;background:#E6F1FB;padding:9px 12px;margin-bottom:12px;font-size:12px;color:#0C447C}
-.alert-bar.green{border-color:#97C459;background:#EAF3DE;color:#27500A}
-.alert-dot{width:8px;height:8px;border-radius:50%;background:#378ADD;flex-shrink:0;animation:pdot 1.5s infinite}
-.alert-dot.g{background:#639922;animation:none}
+.cr{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:.5px solid #D3D1C7}
+.cr:last-child{border-bottom:none}
+.lb{color:#5F5E5A;flex-shrink:0;margin-right:8px}
+.vl{font-weight:500;color:#2C2C2A;text-align:right}
+.vf{font-weight:500;color:#791F1F;text-align:right}
+.vo{font-weight:500;color:#27500A;text-align:right}
+/* alert bars */
+.abar{display:flex;align-items:center;gap:8px;border:1.5px solid #85B7EB;border-radius:8px;background:#E6F1FB;padding:9px 12px;margin-bottom:12px;font-size:12px;color:#0C447C}
+.abar.gr{border-color:#97C459;background:#EAF3DE;color:#27500A}
+.abar.pu{border-color:#AFA9EC;background:#EEEDFE;color:#3C3489}
+.adot{width:8px;height:8px;border-radius:50%;background:#378ADD;flex-shrink:0;animation:pdot 1.5s infinite}
+.adot.g{background:#639922;animation:none}
+.adot.p{background:#7F77DD;animation:none}
 @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
-.missing-bar{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:8px 10px;font-size:11px;color:#633806;margin-top:8px}
-.side-note{flex:1;padding-top:4px}
-.side-note .title{font-size:12px;font-weight:500;margin-bottom:6px}
-.side-note .body{font-size:12px;color:#5F5E5A;line-height:1.6}
-.side-note .foot{margin-top:8px;font-size:11px;color:#888780}
-.highlight{background:#EAF3DE;border:1px solid #97C459;border-radius:6px;padding:7px 10px;font-size:11px;color:#27500A;margin-top:8px}
-.transcript{font-size:11px;color:#5F5E5A;margin-top:8px;font-style:italic;line-height:1.5}
-.edit-btn{font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;border:1.5px solid #B4B2A9;background:#F1EFE8;color:#5F5E5A;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
-.edit-btn:hover{background:#D3D1C7;border-color:#888780;color:#2C2C2A}
-.edit-btn.saving{border-color:#97C459;background:#EAF3DE;color:#27500A}
-.edit-input{width:100%;border:1.5px solid #85B7EB;border-radius:5px;padding:2px 5px;font-size:12px;font-weight:500;color:#2C2C2A;background:#fff;outline:none;text-align:right;font-family:inherit}
-.edit-input:focus{border-color:#378ADD}
-.action-btn{display:flex;align-items:flex-start;gap:10px;width:100%;padding:10px 11px;margin-bottom:8px;border-radius:8px;border:1.5px solid #D3D1C7;background:var(--color-background-primary);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
-.action-btn:last-child{margin-bottom:0}
-.action-btn:hover{border-color:#888780;background:#F1EFE8}
-.action-btn.primary{border-color:#85B7EB;background:#E6F1FB}
-.action-btn.primary:hover{border-color:#378ADD;background:#D4E9F7}
-.action-letter{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;margin-top:1px}
-.al-a{background:#E6F1FB;color:#0C447C;border:1px solid #85B7EB}
-.al-b{background:#F1EFE8;color:#444441;border:1px solid #D3D1C7}
-.action-text{flex:1}
-.action-title{font-size:12px;font-weight:500;color:#2C2C2A;margin-bottom:2px}
-.action-desc{font-size:11px;color:#5F5E5A;line-height:1.4}
-.scope-fork{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:9px 11px;font-size:11px;color:#633806;margin-bottom:12px}
-.empty-state{text-align:center;padding:36px 20px;color:#888780;width:100%}
-.empty-title{font-size:13px;font-weight:500;color:#5F5E5A;margin-bottom:6px}
-.empty-body{font-size:12px;color:#888780;line-height:1.6}
-.empty-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;opacity:.3}
-.ghost-btn{padding:6px 14px;border-radius:6px;border:1.5px solid #D3D1C7;background:none;cursor:pointer;font-size:11px;color:#5F5E5A;margin-top:12px}
-.ghost-btn:hover{background:#F1EFE8;border-color:#888780;color:#2C2C2A}
-.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.metric{background:#F1EFE8;border:1.5px solid #D3D1C7;border-radius:8px;padding:10px;text-align:center}
-.metric .ml{font-size:10px;color:#5F5E5A;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
-.metric .mv{font-size:20px;font-weight:500;color:#2C2C2A}
-.metric .md{font-size:10px;margin-top:2px}
-.md-up{color:#3B6D11}
-.queue-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;background:var(--color-background-primary);border:1.5px solid #D3D1C7;margin-bottom:6px;font-size:12px}
-.queue-item.incoming{border-color:#378ADD;background:#E6F1FB}
-.q-avatar{width:30px;height:30px;border-radius:50%;background:#E6F1FB;border:1px solid #85B7EB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#0C447C;flex-shrink:0}
-.q-name{font-weight:500;font-size:12px;color:#2C2C2A}
-.q-sub{color:#5F5E5A;font-size:11px}
-.q-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;border:1px solid}
-.qb-new{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
-.qb-wait{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
-
-/* ── Phone — fixed size always ── */
-.phone-col{flex-shrink:0;width:200px}
-.phone-device{
-  width:200px;height:420px;
-  background:#1C1C1E;border-radius:36px;
-  padding:0 8px 10px;
-  border:1.5px solid #3A3A3C;
-  position:relative;
-  display:flex;flex-direction:column;
-}
-.phone-btn-l1{position:absolute;left:-4px;top:72px;width:3px;height:26px;background:#3A3A3C;border-radius:2px 0 0 2px}
-.phone-btn-l2{position:absolute;left:-4px;top:108px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
-.phone-btn-l3{position:absolute;left:-4px;top:162px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
-.phone-btn-r{position:absolute;right:-4px;top:100px;width:3px;height:60px;background:#3A3A3C;border-radius:0 2px 2px 0}
-.phone-notch{width:80px;height:22px;background:#1C1C1E;border-radius:0 0 14px 14px;margin:0 auto 0;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:6px;z-index:2}
-.notch-cam{width:7px;height:7px;border-radius:50%;background:#2C2C2E;border:1px solid #3A3A3C}
-.notch-spk{width:36px;height:4px;border-radius:2px;background:#2C2C2E}
-.phone-screen-inner{
-  flex:1;
-  background:#000;border-radius:0 0 28px 28px;
-  overflow:hidden;display:flex;flex-direction:column;
-}
-.status-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 14px 2px;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
-.status-icons{display:flex;align-items:center;gap:3px}
-.screen-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.home-bar{height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.home-ind{width:70px;height:3px;background:#444;border-radius:2px}
-
-/* waveform */
-.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:18px}
-.wbar{width:3px;border-radius:2px;background:rgba(255,255,255,.6);animation:wv .8s ease-in-out infinite}
-.wbar:nth-child(1){height:6px}.wbar:nth-child(2){height:11px;animation-delay:.1s}.wbar:nth-child(3){height:16px;animation-delay:.2s}.wbar:nth-child(4){height:8px;animation-delay:.3s}.wbar:nth-child(5){height:13px;animation-delay:.4s}
+.mbar{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:8px 10px;font-size:11px;color:#633806;margin-top:8px}
+/* side note */
+.sn{flex:1;padding-top:4px}
+.sn .ti{font-size:12px;font-weight:500;margin-bottom:6px;color:#2C2C2A}
+.sn .bo{font-size:12px;color:#5F5E5A;line-height:1.6}
+.sn .fo{margin-top:8px;font-size:11px;color:#888780}
+.hl{background:#EAF3DE;border:1px solid #97C459;border-radius:6px;padding:7px 10px;font-size:11px;color:#27500A;margin-top:8px}
+.hlp{background:#EEEDFE;border:1px solid #AFA9EC;border-radius:6px;padding:7px 10px;font-size:11px;color:#3C3489;margin-top:8px}
+/* edit */
+.ebt{font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;border:1.5px solid #B4B2A9;background:#F1EFE8;color:#5F5E5A;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.ebt:hover{background:#D3D1C7;border-color:#888780;color:#2C2C2A}
+.ebt.sv{border-color:#97C459;background:#EAF3DE;color:#27500A}
+.ei{width:100%;border:1.5px solid #85B7EB;border-radius:5px;padding:2px 5px;font-size:12px;font-weight:500;color:#2C2C2A;background:#fff;outline:none;text-align:right;font-family:inherit}
+/* action buttons */
+.ab{display:flex;align-items:flex-start;gap:10px;width:100%;padding:10px 11px;margin-bottom:8px;border-radius:8px;border:1.5px solid #D3D1C7;background:#fff;cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
+.ab:last-child{margin-bottom:0}
+.ab:hover{border-color:#888780;background:#F1EFE8}
+.ab.pr{border-color:#85B7EB;background:#E6F1FB}
+.ab.pr:hover{border-color:#378ADD;background:#D4E9F7}
+.al{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;margin-top:1px}
+.ala{background:#E6F1FB;color:#0C447C;border:1px solid #85B7EB}
+.alb{background:#F1EFE8;color:#444441;border:1px solid #D3D1C7}
+.ati{font-size:12px;font-weight:500;color:#2C2C2A;margin-bottom:2px}
+.ade{font-size:11px;color:#5F5E5A;line-height:1.4}
+/* empty state */
+.es{text-align:center;padding:36px 20px;color:#888780;width:100%}
+.eti{font-size:13px;font-weight:500;color:#5F5E5A;margin-bottom:6px}
+.ebo{font-size:12px;color:#888780;line-height:1.6}
+.em{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;opacity:.3}
+.gb{padding:6px 14px;border-radius:6px;border:1.5px solid #D3D1C7;background:none;cursor:pointer;font-size:11px;color:#5F5E5A;margin-top:12px}
+.gb:hover{background:#F1EFE8}
+/* metrics */
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mc{background:#F1EFE8;border:1.5px solid #D3D1C7;border-radius:8px;padding:10px;text-align:center}
+.mc .ml{font-size:10px;color:#5F5E5A;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.mc .mv{font-size:20px;font-weight:500;color:#2C2C2A}
+.mc .md{font-size:10px;margin-top:2px;color:#3B6D11}
+/* queue */
+.qi{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;background:#fff;border:1.5px solid #D3D1C7;margin-bottom:6px;font-size:12px}
+.qi.ic{border-color:#378ADD;background:#E6F1FB}
+.qa{width:30px;height:30px;border-radius:50%;background:#E6F1FB;border:1px solid #85B7EB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#0C447C;flex-shrink:0}
+.qn{font-weight:500;font-size:12px;color:#2C2C2A}
+.qs{color:#5F5E5A;font-size:11px}
+.qb{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;border:1px solid}
+.qbn{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.qbw{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
+.sf{border:1.5px solid #EF9F27;border-radius:8px;background:#FAEEDA;padding:9px 11px;font-size:11px;color:#633806;margin-bottom:12px}
+/* phone */
+.pc{flex-shrink:0;width:200px}
+.pd{width:200px;height:420px;background:#1C1C1E;border-radius:36px;padding:0 8px 10px;border:1.5px solid #3A3A3C;position:relative;display:flex;flex-direction:column}
+.bl1{position:absolute;left:-4px;top:72px;width:3px;height:26px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.bl2{position:absolute;left:-4px;top:108px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.bl3{position:absolute;left:-4px;top:162px;width:3px;height:44px;background:#3A3A3C;border-radius:2px 0 0 2px}
+.br{position:absolute;right:-4px;top:100px;width:3px;height:60px;background:#3A3A3C;border-radius:0 2px 2px 0}
+.pn{width:80px;height:22px;background:#1C1C1E;border-radius:0 0 14px 14px;margin:0 auto;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:6px}
+.nc{width:7px;height:7px;border-radius:50%;background:#2C2C2E;border:1px solid #3A3A3C}
+.ns{width:36px;height:4px;border-radius:2px;background:#2C2C2E}
+.psi{flex:1;background:#000;border-radius:0 0 28px 28px;overflow:hidden;display:flex;flex-direction:column}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:6px 14px 2px;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
+.scb{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.hb{height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hi{width:70px;height:3px;background:#444;border-radius:2px}
+.wf{display:flex;align-items:center;justify-content:center;gap:3px;height:18px}
+.wb{width:3px;border-radius:2px;background:rgba(255,255,255,.6);animation:wv .8s ease-in-out infinite}
+.wb:nth-child(1){height:6px}.wb:nth-child(2){height:11px;animation-delay:.1s}.wb:nth-child(3){height:16px;animation-delay:.2s}.wb:nth-child(4){height:8px;animation-delay:.3s}.wb:nth-child(5){height:13px;animation-delay:.4s}
 @keyframes wv{0%,100%{opacity:.4;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
-
-/* hold ring */
-.hold-pulse{width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;animation:hpulse 2s ease-in-out infinite}
-@keyframes hpulse{0%,100%{border-color:rgba(255,255,255,.1)}50%{border-color:rgba(55,138,221,.6)}}
-
-/* call action grid */
-.call-action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}
-.call-action{display:flex;flex-direction:column;align-items:center;gap:4px}
-.cab{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer}
-.cab svg{fill:rgba(255,255,255,.75);width:16px;height:16px}
-.cal{font-size:10px;color:rgba(255,255,255,.4);text-align:center}
-.end-btn{width:50px;height:50px;border-radius:50%;background:#D9534F;display:flex;align-items:center;justify-content:center;margin:0 auto;cursor:pointer}
-.end-btn svg{fill:#fff;width:20px;height:20px;transform:rotate(135deg)}
-.call-avatar-lg{width:60px;height:60px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#fff;border:2px solid rgba(255,255,255,.15)}
-.success-circle{width:52px;height:52px;border-radius:50%;background:rgba(58,155,58,.2);border:2px solid #3A9B3A;display:flex;align-items:center;justify-content:center}
-.success-circle svg{stroke:#3A9B3A;fill:none;stroke-width:2;width:22px;height:22px}
-
+.hp{width:60px;height:60px;border-radius:50%;border:2px solid rgba(127,119,221,.2);display:flex;align-items:center;justify-content:center;animation:hpu 2s ease-in-out infinite}
+@keyframes hpu{0%,100%{border-color:rgba(127,119,221,.15)}50%{border-color:rgba(127,119,221,.7)}}
+.cag{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}
+.ca{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cb{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cl{font-size:10px;color:rgba(255,255,255,.4);text-align:center}
+.endb{width:50px;height:50px;border-radius:50%;background:#D9534F;display:flex;align-items:center;justify-content:center;margin:0 auto;cursor:pointer}
+.av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#fff;border:2px solid rgba(255,255,255,.15)}
+.suc{width:52px;height:52px;border-radius:50%;background:rgba(58,155,58,.2);border:2px solid #3A9B3A;display:flex;align-items:center;justify-content:center}
+/* chat bubbles */
+.bm{align-self:flex-start;background:#1A1A2E;border:1px solid #3A3A5C;border-radius:14px 14px 14px 3px;padding:6px 9px;max-width:145px;margin-bottom:4px}
+.bg2{align-self:flex-end;background:#185FA5;border-radius:14px 14px 3px 14px;padding:6px 9px;max-width:135px;margin-bottom:4px}
+.bj{align-self:flex-start;background:#0C3354;border:1px solid rgba(55,138,221,.3);border-radius:14px 14px 14px 3px;padding:6px 9px;max-width:145px;margin-bottom:4px}
+.btx{font-size:10px;color:#fff;line-height:1.4}
+.bnm{font-size:9px;color:rgba(255,255,255,.4);margin-bottom:2px}
 /* timeline */
-.timeline-wrap{padding:14px 20px 16px;border-top:1.5px solid #888780;background:#F1EFE8}
-.timeline-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.play-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid #888780;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.play-btn svg{width:10px;height:10px;fill:#2C2C2A}
-.tl-track{flex:1;position:relative;height:28px;display:flex;align-items:center}
-.tl-line{position:absolute;left:0;right:0;height:3px;background:#D3D1C7;border-radius:2px}
-.tl-fill{position:absolute;left:0;height:3px;background:#2C2C2A;border-radius:2px;transition:width .2s}
-.tl-dots{position:absolute;left:0;right:0;display:flex;justify-content:space-between}
-.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid #888780;background:#F1EFE8;cursor:pointer;transition:all .15s;flex-shrink:0}
-.tl-dot.done{background:#2C2C2A;border-color:#2C2C2A}
-.tl-dot.active{background:#fff;border-color:#2C2C2A;border-width:2.5px;box-shadow:0 0 0 3px rgba(44,44,42,.15)}
-.tl-dot:hover{border-color:#2C2C2A;transform:scale(1.25)}
-.tl-labels{display:flex;justify-content:space-between}
-.tl-label{font-size:10px;color:#888780;text-align:center;cursor:pointer;padding:2px 4px;border-radius:4px;transition:all .15s;line-height:1.3;flex:1}
-.tl-label:hover{color:#2C2C2A;background:#D3D1C7}
-.tl-label.active{color:#2C2C2A;font-weight:600}
+.tlw{padding:14px 20px 16px;border-top:1.5px solid #888780;background:#F1EFE8}
+.tlt{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.plb{width:28px;height:28px;border-radius:50%;border:1.5px solid #888780;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tlr{flex:1;position:relative;height:28px;display:flex;align-items:center}
+.tll{position:absolute;left:0;right:0;height:3px;background:#D3D1C7;border-radius:2px}
+.tlf{position:absolute;left:0;height:3px;background:#2C2C2A;border-radius:2px;transition:width .2s}
+.tldots{position:absolute;left:0;right:0;display:flex;justify-content:space-between}
+.tldo{width:10px;height:10px;border-radius:50%;border:2px solid #888780;background:#F1EFE8;cursor:pointer;transition:all .15s;flex-shrink:0}
+.tldo.dn{background:#2C2C2A;border-color:#2C2C2A}
+.tldo.ac{background:#fff;border-color:#2C2C2A;border-width:2.5px;box-shadow:0 0 0 3px rgba(44,44,42,.15)}
+.tldo:hover{border-color:#2C2C2A;transform:scale(1.25)}
+.tlls{display:flex;justify-content:space-between}
+.tlla{font-size:10px;color:#888780;text-align:center;cursor:pointer;padding:2px 4px;border-radius:4px;transition:all .15s;line-height:1.3;flex:1}
+.tlla:hover{color:#2C2C2A;background:#D3D1C7}
+.tlla.ac{color:#2C2C2A;font-weight:600}
 </style>
-
+</head>
+<body>
 <div class="proto">
   <div class="char-bar">
     <button class="char-btn active" onclick="sw('margaret',this)">Margaret<span class="role">Caller</span></button>
@@ -158,247 +155,122 @@ body{font-family:var(--font-sans,sans-serif);font-size:14px;color:var(--color-te
     <div class="view" id="v-specialist"></div>
     <div class="view" id="v-asif"></div>
   </div>
-  <div class="timeline-wrap">
-    <div class="timeline-top">
-      <button class="play-btn" id="playbtn" onclick="togglePlay()">
-        <svg id="playicon" viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
-      </button>
-      <div class="tl-track">
-        <div class="tl-line"></div>
-        <div class="tl-fill" id="tl-fill"></div>
-        <div class="tl-dots" id="tl-dots"></div>
+  <div class="tlw">
+    <div class="tlt">
+      <button class="plb" id="playbtn" onclick="togglePlay()"><svg id="playicon" width="10" height="10" viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9" fill="#2C2C2A"/></svg></button>
+      <div class="tlr">
+        <div class="tll"></div>
+        <div class="tlf" id="tlf"></div>
+        <div class="tldots" id="tld"></div>
       </div>
     </div>
-    <div class="tl-labels" id="tl-labels"></div>
+    <div class="tlls" id="tlls"></div>
   </div>
 </div>
 
 <script>
-const PHASES=['Trigger','AI intercept','Routing','Handoff','Resolution','Wrap-up'];
+const PHASES=['Trigger','AI triage','Routing','Handoff','Resolution','Wrap-up'];
 const CHARS=['margaret','raymond','specialist','asif'];
-let cur='margaret',phase=0,playing=false,timer=null;
-let summaryEditing=false;
-let summaryData={name:'Margaret Hooper',account:'••4421 (checking)',branch:'Midtown East',since:'2011',issue:'Dispute — $247 AMZN',risk:'74 / high'};
+let cur='margaret',phase=0,playing=false,timer=null,summaryEditing=false;
+let SD={name:'Margaret Hooper',account:'••4421 (checking)',branch:'Lex Ave Branch',since:'2011',issue:'Dispute — $247 AMZN',risk:'74 / high'};
 
-function sw(c,btn){
-  cur=c;
-  CHARS.forEach(x=>document.getElementById('v-'+x).classList.remove('active'));
-  document.querySelectorAll('.char-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('v-'+c).classList.add('active');
-  btn.classList.add('active');
-  render();
-}
-function setPhase(p){phase=p;summaryEditing=false;updateTimeline();render();}
-function updateTimeline(){
+function sw(c,btn){cur=c;CHARS.forEach(x=>document.getElementById('v-'+x).classList.remove('active'));document.querySelectorAll('.char-btn').forEach(b=>b.classList.remove('active'));document.getElementById('v-'+c).classList.add('active');btn.classList.add('active');render();}
+function setPhase(p){phase=p;summaryEditing=false;updateTL();render();}
+function updateTL(){
   const pct=phase===0?0:(phase/(PHASES.length-1)*100);
-  document.getElementById('tl-fill').style.width=pct+'%';
-  document.querySelectorAll('.tl-dot').forEach((d,i)=>{d.classList.remove('done','active');if(i<phase)d.classList.add('done');else if(i===phase)d.classList.add('active');});
-  document.querySelectorAll('.tl-label').forEach((l,i)=>l.classList.toggle('active',i===phase));
+  document.getElementById('tlf').style.width=pct+'%';
+  document.querySelectorAll('.tldo').forEach((d,i)=>{d.classList.remove('dn','ac');if(i<phase)d.classList.add('dn');else if(i===phase)d.classList.add('ac');});
+  document.querySelectorAll('.tlla').forEach((l,i)=>l.classList.toggle('ac',i===phase));
 }
-function buildTimeline(){
-  document.getElementById('tl-dots').innerHTML=PHASES.map((_,i)=>`<div class="tl-dot${i===0?' active':''}" onclick="setPhase(${i})"></div>`).join('');
-  document.getElementById('tl-labels').innerHTML=PHASES.map((ph,i)=>`<div class="tl-label${i===0?' active':''}" onclick="setPhase(${i})">${ph}</div>`).join('');
+function buildTL(){
+  document.getElementById('tld').innerHTML=PHASES.map((_,i)=>`<div class="tldo${i===0?' ac':''}" onclick="setPhase(${i})"></div>`).join('');
+  document.getElementById('tlls').innerHTML=PHASES.map((ph,i)=>`<div class="tlla${i===0?' ac':''}" onclick="setPhase(${i})">${ph}</div>`).join('');
 }
-function togglePlay(){
-  playing=!playing;
-  document.getElementById('playicon').innerHTML=playing?'<rect x="1.5" y="1" width="3" height="8"/><rect x="5.5" y="1" width="3" height="8"/>':'<polygon points="2,1 9,5 2,9"/>';
-  if(playing)autoPlay();else clearTimeout(timer);
-}
-function autoPlay(){if(!playing)return;setPhase((phase+1)%PHASES.length);timer=setTimeout(autoPlay,2200);}
+function togglePlay(){playing=!playing;document.getElementById('playicon').innerHTML=playing?'<rect x="1.5" y="1" width="3" height="8" fill="#2C2C2A"/><rect x="5.5" y="1" width="3" height="8" fill="#2C2C2A"/>':'<polygon points="2,1 9,5 2,9" fill="#2C2C2A"/>';if(playing)autoPlay();else clearTimeout(timer);}
+function autoPlay(){if(!playing)return;setPhase((phase+1)%PHASES.length);timer=setTimeout(autoPlay,2400);}
+function render(){rM();rR();rS();rA();}
 
-function b(txt,type){return`<span class="phase-badge badge-${type}">${txt}</span>`}
-function render(){rMargaret();rRaymond();rSpecialist();rAsif();}
+const SI=`<svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><rect x="0" y="5" width="2" height="6" rx="1"/><rect x="3" y="3" width="2" height="8" rx="1"/><rect x="6" y="1" width="2" height="10" rx="1"/><rect x="9" y="0" width="2" height="11" rx="1"/></svg><svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.6 4.6L11.4 5.8C10.3 4.5 8.8 3.7 7 3.7S3.7 4.5 2.6 5.8L1.4 4.6C2.8 3 4.8 2 7 2zM7 5.5c1.4 0 2.5.6 3.3 1.5L9.1 8.1C8.5 7.4 7.8 7 7 7s-1.5.4-2.1 1.1L3.7 7C4.5 6.1 5.6 5.5 7 5.5zM7 9a1.5 1.5 0 110 3A1.5 1.5 0 017 9z"/></svg><svg width="22" height="10" viewBox="0 0 22 11" fill="none"><rect x=".5" y="1" width="18" height="9" rx="2" stroke="#fff" stroke-width="1"/><rect x="2" y="2.5" width="12" height="6" rx="1" fill="#fff"/><path d="M20 3.5v4c1-.7 1-3.3 0-4z" fill="#fff"/></svg>`;
 
-/* status bar svg icons — fixed size always */
-const statusIcons=`
-  <svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><rect x="0" y="5" width="2" height="6" rx="1"/><rect x="3" y="3" width="2" height="8" rx="1"/><rect x="6" y="1" width="2" height="10" rx="1"/><rect x="9" y="0" width="2" height="11" rx="1"/></svg>
-  <svg width="12" height="10" viewBox="0 0 14 11" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.6 4.6L11.4 5.8C10.3 4.5 8.8 3.7 7 3.7S3.7 4.5 2.6 5.8L1.4 4.6C2.8 3 4.8 2 7 2zM7 5.5c1.4 0 2.5.6 3.3 1.5L9.1 8.1C8.5 7.4 7.8 7 7 7s-1.5.4-2.1 1.1L3.7 7c.8-.9 1.9-1.5 3.3-1.5zM7 9a1.5 1.5 0 110 3A1.5 1.5 0 017 9z"/></svg>
-  <svg width="22" height="10" viewBox="0 0 22 11" fill="none"><rect x=".5" y="1" width="18" height="9" rx="2" stroke="#fff" stroke-width="1"/><rect x="2" y="2.5" width="12" height="6" rx="1" fill="#fff"/><path d="M20 3.5v4c1-.7 1-3.3 0-4z" fill="#fff"/></svg>`;
+const CC=`<div class="cag"><div class="ca"><div class="cb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.8"><path d="M15.5 8.5a5 5 0 010 7M12 6a8 8 0 010 12"/></svg></div><div class="cl">speaker</div></div><div class="ca"><div class="cb"><svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,.75)"><path d="M17 11c0 2.8-2.2 5-5 5s-5-2.2-5-5V5c0-2.8 2.2-5 5-5s5 2.2 5 5v6zm-5 7c3.9 0 7-3.1 7-7h-2c0 2.8-2.2 5-5 5s-5-2.2-5-5H5c0 3.9 3.1 7 7 7zm-1 3h2v-2h-2v2z"/></svg></div><div class="cl">mute</div></div><div class="ca"><div class="cb"><svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,.75)"><path d="M3 3h7v2H5v4H3V3zm11 0h7v6h-2V5h-5V3zM3 13h2v4h5v2H3v-6zm16 4h-5v2h7v-6h-2v4z"/></svg></div><div class="cl">keypad</div></div></div><div class="endb" style="margin-top:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="white" transform="rotate(135)"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg></div>`;
 
-/* phone frame wrapper — FIXED 200×420 always */
-function phone(bodyHTML){
-  return`<div class="phone-col">
-    <div class="phone-device">
-      <div class="phone-btn-l1"></div><div class="phone-btn-l2"></div><div class="phone-btn-l3"></div><div class="phone-btn-r"></div>
-      <div class="phone-notch"><div class="notch-cam"></div><div class="notch-spk"></div></div>
-      <div class="phone-screen-inner">
-        <div class="status-bar"><span>9:41</span><div class="status-icons">${statusIcons}</div></div>
-        <div class="screen-body">${bodyHTML}</div>
-        <div class="home-bar"><div class="home-ind"></div></div>
-      </div>
-    </div>
-  </div>`;
-}
+function phone(body){return`<div class="pc"><div class="pd"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div><div class="br"></div><div class="pn"><div class="nc"></div><div class="ns"></div></div><div class="psi"><div class="sb"><span>9:41</span><div style="display:flex;align-items:center;gap:3px">${SI}</div></div><div class="scb">${body}</div><div class="hb"><div class="hi"></div></div></div></div></div>`;}
 
-/* call controls reused across phases */
-const callControls=`<div class="call-action-grid">
-  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24"><path d="M15.5 8.5a5 5 0 010 7M12 6a8 8 0 010 12" stroke="rgba(255,255,255,.8)" fill="none" stroke-width="1.8"/></svg></div><div class="cal">speaker</div></div>
-  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M17 11c0 2.8-2.2 5-5 5s-5-2.2-5-5V5c0-2.8 2.2-5 5-5s5 2.2 5 5v6zm-5 7c3.9 0 7-3.1 7-7h-2c0 2.8-2.2 5-5 5s-5-2.2-5-5H5c0 3.9 3.1 7 7 7zm-1 3h2v-2h-2v2z"/></svg></div><div class="cal">mute</div></div>
-  <div class="call-action"><div class="cab"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.8)"><path d="M3 3h7v2H5v4H3V3zm11 0h7v6h-2V5h-5V3zM3 13h2v4h5v2H3v-6zm16 4h-5v2h7v-6h-2v4z"/></svg></div><div class="cal">keypad</div></div>
-</div>
-<div class="end-btn" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="white"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg></div>`;
-
-/* ── Margaret ── */
-function rMargaret(){
-  const el=document.getElementById('v-margaret'); const p=phase;
-  let body='', note='', badgeType='gray';
-
+function rM(){
+  const el=document.getElementById('v-margaret');const p=phase;
+  let body='',note='',badge='',bc='pg';
   if(p===0){
-    badgeType='gray';
-    body=`<div style="background:linear-gradient(160deg,#0C447C,#185FA5);padding:14px 12px 10px;flex-shrink:0">
-      <div style="font-size:10px;color:rgba(255,255,255,.55);margin-bottom:1px">Chase Bank</div>
-      <div style="font-size:13px;font-weight:500;color:#fff">Checking ••4421</div>
-      <div style="font-size:22px;font-weight:300;color:#fff;margin:6px 0 2px">$3,842.50</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.45)">Available balance</div>
-    </div>
-    <div style="flex:1;padding:10px 12px;overflow:hidden">
-      <div style="font-size:10px;font-weight:500;color:rgba(255,255,255,.35);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase">Recent</div>
-      <div style="background:rgba(229,75,74,.15);border:1px solid rgba(229,75,74,.35);border-radius:9px;padding:8px 10px;margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div><div style="font-size:11px;font-weight:500;color:#fff">AMZN*MKTP</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:1px">Apr 27 &middot; Card</div></div>
-          <div style="text-align:right"><div style="font-size:12px;font-weight:500;color:#F09595">-$247.00</div><div style="font-size:10px;color:rgba(229,75,74,.8);margin-top:1px">Not recognised?</div></div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.07)"><div><div style="font-size:11px;color:#fff">Trader Joe's</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 26</div></div><div style="font-size:11px;color:rgba(255,255,255,.6)">-$54.20</div></div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0"><div><div style="font-size:11px;color:#fff">Direct deposit</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 25</div></div><div style="font-size:11px;color:#3A9B3A">+$2,400.00</div></div>
-      <button style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:#185FA5;border:none;color:#fff;font-size:11px;font-weight:500;cursor:pointer">Call branch about this charge</button>
-    </div>`;
-    note=`<div class="title">What Margaret sees</div><div class="body">Her banking app flags the $247 AMZN charge in red. She taps to call her branch directly — not a 1-800 number.</div><div class="foot">Surface: phone banking app<br>Next: she dials her branch line</div>`;
+    bc='pg';badge='Phase 1 — trigger';
+    body=`<div style="background:linear-gradient(160deg,#0C447C,#185FA5);padding:14px 12px 10px;flex-shrink:0"><div style="font-size:10px;color:rgba(255,255,255,.55);margin-bottom:1px">Chase Bank</div><div style="font-size:13px;font-weight:500;color:#fff">Checking &#x2022;&#x2022;4421</div><div style="font-size:22px;font-weight:300;color:#fff;margin:6px 0 2px">$3,842.50</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Available balance</div></div><div style="flex:1;padding:10px 12px;overflow:hidden"><div style="font-size:10px;font-weight:500;color:rgba(255,255,255,.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Recent</div><div style="background:rgba(229,75,74,.15);border:1px solid rgba(229,75,74,.35);border-radius:9px;padding:8px 10px;margin-bottom:6px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;font-weight:500;color:#fff">AMZN*MKTP</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:1px">Apr 27 &middot; Card</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:500;color:#F09595">-$247.00</div><div style="font-size:10px;color:rgba(229,75,74,.8);margin-top:1px">Not recognised?</div></div></div></div><div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.07)"><div><div style="font-size:11px;color:#fff">Trader Joe's</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 26</div></div><div style="font-size:11px;color:rgba(255,255,255,.6)">-$54.20</div></div><div style="display:flex;justify-content:space-between;padding:7px 0"><div><div style="font-size:11px;color:#fff">Direct deposit</div><div style="font-size:10px;color:rgba(255,255,255,.35)">Apr 25</div></div><div style="font-size:11px;color:#3A9B3A">+$2,400.00</div></div><div style="margin-top:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px 10px"><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:3px">Google search</div><div style="font-size:11px;color:#fff">"Chase Lex Ave branch number"</div><div style="font-size:10px;color:#85B7EB;margin-top:3px">&#x2192; (212) 555-0142</div></div></div>`;
+    note=`<div class="ti">What Margaret sees</div><div class="bo">She notices a $247 AMZN charge she doesn't recognise. She searches Google for her Chase Lex Avenue branch phone number, finds it, and is about to dial.</div><div class="fo">Surface: banking app + Google search<br>Next: she dials (212) 555-0142</div>`;
+  } else if(p===1){
+    bc='pp';badge='Phase 2 — AI triage with Maya';
+    body=`<div style="flex:1;display:flex;flex-direction:column;padding:8px 10px 0"><div style="text-align:center;margin-bottom:8px"><div style="font-size:10px;color:rgba(127,119,221,.7);letter-spacing:.5px;text-transform:uppercase">Chase &middot; Lex Ave Branch</div><div style="font-size:12px;font-weight:500;color:#fff">Maya &middot; AI triage agent</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:1px">1:34</div></div><div style="flex:1;display:flex;flex-direction:column;overflow:hidden;gap:0"><div class="bm"><div class="bnm">Maya</div><div class="btx">Hi, I'm Maya from Chase Lex Ave. Before we begin — please don't share any PII like SSN or card numbers. What can I help you with today?</div></div><div class="bg2"><div class="btx">Hi — there's a $247 charge on my account I don't recognise. Amazon.</div></div><div class="bm"><div class="bnm">Maya</div><div class="btx">Got it. When did it appear, and have you made any Amazon purchases recently?</div></div><div class="bg2"><div class="btx">Yesterday. I haven't ordered anything in weeks.</div></div><div class="bm"><div class="bnm">Maya</div><div class="btx">Understood. I have enough details — please hold while I connect you to the next available call center specialist.</div></div></div><div style="margin-top:auto;padding-bottom:4px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:5px 8px;background:rgba(127,119,221,.12);border:1px solid rgba(127,119,221,.25);border-radius:8px"><div style="width:6px;height:6px;border-radius:50%;background:#7F77DD;flex-shrink:0;animation:pdot 1s infinite"></div><div style="font-size:10px;color:rgba(255,255,255,.5)">Speak naturally &middot; can interrupt</div></div>${CC}</div></div>`;
+    note=`<div class="ti">Talking with Maya, AI triage</div><div class="bo">Maya greets Margaret, sets PII ground rules, then listens. Margaret explains in her own words. Maya asks two clarifying questions — when did it appear, any recent orders. No menu. No IVR.</div><div class="hlp">Natural conversation &middot; can interrupt &middot; Maya asks clarifying questions &middot; full situation captured</div><div class="fo" style="margin-top:8px">Agent: Maya (AI) &middot; Surface: voice call<br>Outcome: issue fully described</div>`;
+  } else if(p===2){
+    bc='pa';badge='Phase 3 — routing & logging';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0"><div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">on hold</div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">Chase &middot; Lex Ave Branch</div><div style="font-size:10px;color:rgba(127,119,221,.7);margin-bottom:12px">Maya &middot; finding call center specialist&hellip;</div><div class="hp" style="margin-bottom:10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(127,119,221,.7)"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg></div><div style="font-size:12px;font-weight:500;color:#fff;margin-bottom:3px">Connecting you&hellip;</div><div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;line-height:1.5;margin-bottom:10px">Maya is logging the conversation</div><div style="width:130px;background:rgba(255,255,255,.06);border:1px solid rgba(127,119,221,.2);border-radius:7px;padding:8px 10px"><div style="font-size:9px;color:rgba(127,119,221,.6);margin-bottom:4px">Writing to database&hellip;</div><div style="height:2px;background:rgba(127,119,221,.15);border-radius:1px;margin-bottom:3px"><div style="width:85%;height:100%;background:#7F77DD;border-radius:1px"></div></div><div style="height:2px;background:rgba(127,119,221,.15);border-radius:1px;margin-bottom:3px"><div style="width:65%;height:100%;background:#7F77DD;border-radius:1px"></div></div><div style="height:2px;background:rgba(127,119,221,.15);border-radius:1px"><div style="width:45%;height:100%;background:#7F77DD;border-radius:1px"></div></div></div><div style="margin-top:auto;width:100%;padding-bottom:4px">${CC}</div></div>`;
+    note=`<div class="ti">Hold — Maya routing and logging</div><div class="bo">Margaret hears hold music. Behind the scenes, Maya is simultaneously finding the next available call center specialist and writing two things to the database: a conversation summary and the full transcript.</div><div class="fo">Surface: audio only — hold music<br>Invisible: DB write, specialist match, context object</div>`;
+  } else if(p===3){
+    bc='pbl';badge='Phase 4 — handoff';
+    body=`<div style="flex:1;display:flex;flex-direction:column;padding:8px 10px 0"><div style="text-align:center;margin-bottom:8px"><div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase">3-way &middot; Lex Ave Branch</div><div style="font-size:12px;font-weight:500;color:#fff">Maya + James T.</div><div style="font-size:10px;color:#378ADD;margin-top:1px">Handing over now</div></div><div style="flex:1;display:flex;flex-direction:column;overflow:hidden;gap:0"><div class="bm"><div class="bnm">Maya</div><div class="btx">James, I have Margaret on the line. Unrecognised $247 AMZN charge Apr 27. No recent orders. Risk score 74. No prior disputes. Connecting her now.</div></div><div style="align-self:center;font-size:9px;color:rgba(255,255,255,.25);padding:3px 0">James joined the call</div><div class="bj"><div class="bnm" style="color:rgba(55,138,221,.6)">James</div><div class="btx">Thanks Maya. Hi Margaret — I'm James, your call center specialist. I have the full picture. Let's get this sorted.</div></div></div><div style="margin-top:auto;padding-bottom:4px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:5px 8px;background:rgba(55,138,221,.1);border:1px solid rgba(55,138,221,.22);border-radius:8px"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;flex-shrink:0"></div><div style="font-size:10px;color:rgba(255,255,255,.5)">Now 1-on-1 with James &middot; Call center specialist</div></div>${CC}</div></div>`;
+    note=`<div class="ti" style="color:#0C447C">The handoff moment</div><div class="bo">Maya adds James to the call and gives him a verbal briefing — Margaret's issue, the charge, risk score, no prior disputes — then steps off. James greets Margaret already knowing everything.</div><div class="hl">Margaret does not repeat herself. Not once. Verbal + database context both passed to James.</div><div class="fo" style="margin-top:8px">Handoff: Maya verbal brief + CRM pull<br>Surface: voice — now 1-on-1 with James</div>`;
+  } else if(p===4){
+    bc='pgr';badge='Phase 5 — resolution';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px"><div class="suc" style="margin-bottom:10px"><svg viewBox="0 0 24 24" fill="none" stroke="#3A9B3A" stroke-width="2" width="22" height="22"><polyline points="4,12 9,17 20,6"/></svg></div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">Dispute filed</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Ref #DIS-2024-9912</div><div style="background:rgba(58,155,58,.15);border:1px solid rgba(58,155,58,.28);border-radius:10px;padding:10px 12px;width:100%"><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Amount</span><span style="color:#fff;font-weight:500">$247.00</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Credit</span><span style="color:#3A9B3A;font-weight:500">+$247.00</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Timeline</span><span style="color:#fff;font-weight:500">3-5 days</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Specialist</span><span style="color:#fff;font-weight:500">James T.</span></div></div><div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px;font-style:italic">"You'll see the provisional credit within 24 hours."</div></div>`;
+    note=`<div class="ti">Issue resolved</div><div class="bo">James files the dispute and issues provisional credit. Because he had Maya's verbal briefing plus full CRM context, he only needed a couple of clarifying questions. Resolved in a single call.</div><div class="fo">Outcome: FCR achieved &middot; no repeat &middot; no callback<br>Call duration: well under baseline AHT</div>`;
+  } else {
+    bc='pg';badge='Phase 6 — wrap-up';
+    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px"><div class="suc" style="margin-bottom:10px"><svg viewBox="0 0 24 24" fill="none" stroke="#3A9B3A" stroke-width="2" width="22" height="22"><polyline points="4,12 9,17 20,6"/></svg></div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">Call complete</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Duration: 4:07</div><div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:10px;padding:10px 12px;width:100%;margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Triage agent</span><span style="color:#fff;font-weight:500">Maya (AI)</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Specialist</span><span style="color:#fff;font-weight:500">James T.</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Ref</span><span style="color:#fff;font-weight:500">DIS-2024-9912</span></div><div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Status</span><span style="color:#3A9B3A;font-weight:500">Resolved</span></div></div><div style="font-size:10px;color:rgba(255,255,255,.28);text-align:center;line-height:1.6;font-style:italic">"Found the number, called, someone already knew my problem."</div><button style="margin-top:12px;width:100%;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:transparent;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer">Rate this experience &#9733;</button></div>`;
+    note=`<div class="ti">Margaret's experience — end to end</div><div class="bo">She found the branch number on Google, called, was greeted by Maya the AI triage agent, described her issue naturally, held briefly, then connected to James who already knew everything about her situation.</div><div class="hl">No repeat. Context preserved. Branch relationship intact. Seamless end to end.</div><div class="fo" style="margin-top:8px">CSAT driver: no repeat, fast resolution<br>Trust: branch relationship fully preserved</div>`;
   }
-
-  else if(p===1){
-    badgeType='blue';
-    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
-      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">calling</div>
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Midtown East Branch</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px">Connecting…</div>
-      <div class="call-avatar-lg" style="background:#2C2C2E;border-color:rgba(255,255,255,.08);margin-bottom:8px">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg>
-      </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;padding:0 12px;margin-bottom:10px;font-style:italic;line-height:1.5">"Hi, can you tell me what's going on?"</div>
-      <div class="waveform"></div>
-      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
-    </div>`;
-    note=`<div class="title">What Margaret hears</div><div class="body">An AI greets her naturally — no menu tree. She explains the charge in her own words. The AI confirms it understood.</div><div class="foot">Surface: audio only<br>Key moment: no IVR, no prompts</div>`;
-  }
-
-  else if(p===2){
-    badgeType='gray';
-    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
-      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">on hold</div>
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Midtown East Branch</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:14px">0:42</div>
-      <div class="hold-pulse" style="margin-bottom:10px">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)"><path d="M3 5h4l2 5-2 2a12 12 0 005 5l2-2 5 2v4a2 2 0 01-2 2C7 22 2 17 2 7a2 2 0 012-2z"/></svg>
-      </div>
-      <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Connecting you…</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center">Finding the right specialist</div>
-      <div style="width:100px;height:2px;background:rgba(255,255,255,.1);border-radius:1px;margin-top:10px"><div style="width:65%;height:100%;background:rgba(255,255,255,.4);border-radius:1px"></div></div>
-      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
-    </div>`;
-    note=`<div class="title">What Margaret hears</div><div class="body">Hold music. Routing is completely invisible. The context object is being built behind the scenes.</div><div class="foot">Surface: audio only<br>Invisible: routing, lookup, context build</div>`;
-  }
-
-  else if(p===3){
-    badgeType='blue';
-    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 12px 0">
-      <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">connected</div>
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">James T. — Disputes</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px">1:04</div>
-      <div class="call-avatar-lg" style="margin-bottom:8px">JT</div>
-      <div class="waveform" style="margin-bottom:8px"></div>
-      <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;padding:0 10px;font-style:italic;line-height:1.5">"Hi Margaret — I see you're calling about the Amazon charge on the 27th."</div>
-      <div style="margin-top:auto;width:100%;padding-bottom:4px">${callControls}</div>
-    </div>`;
-    note=`<div class="title" style="color:#0C447C">The key moment</div><div class="body">James already knows her name and the exact charge. Margaret does not repeat herself once.</div><div class="highlight">No repeat. This is the primary trust signal.</div><div class="foot" style="margin-top:8px">Surface: audio only</div>`;
-  }
-
-  else if(p===4){
-    badgeType='green';
-    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px">
-      <div class="success-circle" style="margin-bottom:10px"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg></div>
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Dispute filed</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Ref #DIS-2024-9912</div>
-      <div style="background:rgba(58,155,58,.15);border:1px solid rgba(58,155,58,.3);border-radius:10px;padding:10px 12px;width:100%">
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Amount</span><span style="color:#fff;font-weight:500">$247.00</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Credit</span><span style="color:#3A9B3A;font-weight:500">+$247.00</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Timeline</span><span style="color:#fff;font-weight:500">3–5 days</span></div>
-      </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px;font-style:italic">"You'll see the credit within 24 hours."</div>
-    </div>`;
-    note=`<div class="title">Issue resolved</div><div class="body">Dispute filed, provisional credit issued. Margaret has a reference number and the call is nearly done.</div><div class="foot">Outcome: FCR achieved, no callback needed</div>`;
-  }
-
-  else{
-    badgeType='gray';
-    body=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px">
-      <div class="success-circle" style="margin-bottom:10px"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg></div>
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:2px">Call complete</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px">Duration: 4:07</div>
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px;width:100%">
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Ref</span><span style="color:#fff;font-weight:500">DIS-2024-9912</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Specialist</span><span style="color:#fff;font-weight:500">James T.</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:rgba(255,255,255,.45)">Branch</span><span style="color:#fff;font-weight:500">Midtown East</span></div>
-      </div>
-      <button style="margin-top:12px;width:100%;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-size:11px;cursor:pointer">Rate this call ★</button>
-    </div>`;
-    note=`<div class="title">Margaret's experience ends here</div><div class="body">She called her branch, spoke to someone who already knew her problem, resolved in one call. Her perception: "my branch took care of me."</div><div class="foot">CSAT driver: no repeat, fast resolution</div>`;
-  }
-
-  el.innerHTML=`${phone(body)}<div class="side-note">${b('Phase '+(phase+1)+' — '+PHASES[phase],badgeType)}${note}</div>`;
+  el.innerHTML=`${phone(body)}<div class="sn"><span class="pb ${bc}">${badge}</span>${note}</div>`;
 }
 
-/* ── Edit helpers ── */
-function toggleEdit(){
-  if(!summaryEditing){summaryEditing=true;}
-  else{['name','account','branch','since','issue','risk'].forEach(f=>{const e=document.getElementById('si-'+f);if(e)summaryData[f]=e.value;});summaryEditing=false;}
-  rRaymond();
-}
-function cancelEdit(){summaryEditing=false;rRaymond();}
-function buildSummaryCard(withData){
-  const eIco=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8.5 1.5l2 2-6 6H2.5v-2l6-6z"/></svg>`;
-  const sIco=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,6 5,9 10,3"/></svg>`;
+function toggleEdit(){if(!summaryEditing){summaryEditing=true;}else{['name','account','branch','since','issue','risk'].forEach(f=>{const e=document.getElementById('si-'+f);if(e)SD[f]=e.value;});summaryEditing=false;}rR();}
+function cancelEdit(){summaryEditing=false;rR();}
+function buildSC(withData){
+  const eI=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8.5 1.5l2 2-6 6H2.5v-2l6-6z"/></svg>`;
+  const sI=`<svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,6 5,9 10,3"/></svg>`;
   if(!withData)return`<div class="card"><h4>Summary — Caller</h4><div style="font-size:12px;color:#888780;padding:6px 0">No active call.</div></div>`;
-  const labels={name:'Name',account:'Account',branch:'Branch',since:'Customer since',issue:'Issue',risk:'Risk score'};
-  if(!summaryEditing)return`<div class="card"><h4>Summary — Caller<button class="edit-btn" onclick="toggleEdit()">${eIco} Edit</button></h4>${Object.keys(labels).map(f=>`<div class="card-row"><span class="lbl">${labels[f]}</span><span class="${f==='issue'||f==='risk'?'val-flag':'val'}">${summaryData[f]}</span></div>`).join('')}</div>`;
-  return`<div class="card"><h4>Summary — Caller<div style="display:flex;gap:5px"><button class="edit-btn saving" onclick="toggleEdit()">${sIco} Save</button><button class="edit-btn" onclick="cancelEdit()" style="color:#791F1F;border-color:#F09595;background:#FCEBEB">✕</button></div></h4>${Object.keys(labels).map(f=>`<div class="card-row"><span class="lbl">${labels[f]}</span><input class="edit-input" id="si-${f}" value="${summaryData[f]}"/></div>`).join('')}</div>`;
+  const LB={name:'Name',account:'Account',branch:'Branch',since:'Customer since',issue:'Issue',risk:'Risk score'};
+  if(!summaryEditing)return`<div class="card"><h4>Summary — Caller<button class="ebt" onclick="toggleEdit()">${eI} Edit</button></h4>${Object.keys(LB).map(f=>`<div class="cr"><span class="lb">${LB[f]}</span><span class="${f==='issue'||f==='risk'?'vf':'vl'}">${SD[f]}</span></div>`).join('')}</div>`;
+  return`<div class="card"><h4>Summary — Caller<div style="display:flex;gap:5px"><button class="ebt sv" onclick="toggleEdit()">${sI} Save</button><button class="ebt" onclick="cancelEdit()" style="color:#791F1F;border-color:#F09595;background:#FCEBEB">&#x2715;</button></div></h4>${Object.keys(LB).map(f=>`<div class="cr"><span class="lb">${LB[f]}</span><input class="ei" id="si-${f}" value="${SD[f]}"/></div>`).join('')}</div>`;
 }
 
-/* ── Raymond ── */
-function rRaymond(){
-  const el=document.getElementById('v-raymond'); const p=phase;
-  const a0=`<div class="card"><h4>Actions</h4><div style="font-size:12px;color:#888780;padding:6px 0">Actions appear once a call is intercepted.</div></div>`;
-  const a1=`<div class="card"><h4>Actions</h4><button class="action-btn primary"><span class="action-letter al-a">A</span><div class="action-text"><div class="action-title">Handle the call yourself</div><div class="action-desc">Best for simple balance or account questions.</div></div></button><button class="action-btn"><span class="action-letter al-b">B</span><div class="action-text"><div class="action-title">Route to specialist</div><div class="action-desc">Transfer with full context — no repeat for customer.</div></div></button></div>`;
-  const a2=`<div class="card"><h4>Actions</h4><button class="action-btn primary"><span class="action-letter al-a">A</span><div class="action-text"><div class="action-title">Resolve the dispute</div><div class="action-desc">File and issue provisional credit from this screen.</div></div></button><button class="action-btn"><span class="action-letter al-b">B</span><div class="action-text"><div class="action-title">Direct to disputes specialist</div><div class="action-desc">Risk score 74 — recommended for this call.</div></div></button></div>`;
-  const ar=`<div class="card"><h4>Actions</h4><div style="background:#EAF3DE;border:1px solid #97C459;border-radius:8px;padding:8px 10px;font-size:12px;color:#27500A;margin-bottom:6px">&#10003; Routed to specialist</div><div style="font-size:11px;color:#5F5E5A">Raymond returned to walk-in customers.</div></div>`;
+function rR(){
+  const el=document.getElementById('v-raymond');const p=phase;
+  const a0=`<div class="card"><h4>Actions</h4><div style="font-size:12px;color:#888780;padding:6px 0">Actions appear once Maya completes triage.</div></div>`;
+  const a2=`<div class="card"><h4>Actions</h4><button class="ab pr"><span class="al ala">A</span><div style="flex:1"><div class="ati">Resolve directly</div><div class="ade">Handle simple account or balance questions.</div></div></button><button class="ab"><span class="al alb">B</span><div style="flex:1"><div class="ati">Route to call center specialist</div><div class="ade">Risk 74 — Maya recommends call center specialist. Full context attached.</div></div></button></div>`;
+  const ar=`<div class="card"><h4>Actions</h4><div style="background:#EAF3DE;border:1px solid #97C459;border-radius:8px;padding:8px 10px;font-size:12px;color:#27500A;margin-bottom:6px">&#10003; Maya routed directly to call center specialist</div><div style="font-size:11px;color:#5F5E5A">This call type bypassed the branch banker. Raymond remained available for walk-ins.</div></div>`;
   let h='';
-  if(p===0)h=b('Phase 1 — no active call','gray')+`<div class="two-col">${buildSummaryCard(false)}${a0}</div>`;
-  else if(p===1)h=b('Phase 2 — AI intercepts','amber')+`<div class="scope-fork">AI intercepted the branch line. Raymond can review, edit the summary, and choose next action.</div><div class="two-col">${buildSummaryCard(true)}${a1}</div>`;
-  else if(p===2)h=b('Phase 3 — intent classified','blue')+`<div class="alert-bar"><div class="alert-dot"></div>Dispute confirmed &middot; Risk 74 &middot; Specialist recommended</div><div class="two-col">${buildSummaryCard(true)}${a2}</div>`;
-  else if(p===3)h=b('Phase 4 — routed to specialist','green')+`<div class="two-col">${buildSummaryCard(true)}${ar}</div>`;
-  else h=b('Phase '+(p+1)+' — not in scope','gray')+`<div class="empty-state"><div class="empty-title">Raymond is not in this phase</div><div class="empty-body">Returned to walk-in customers after routing.</div></div>`;
+  if(p===0)h=`<span class="pb pg">Phase 1 — no active call</span><div class="two-col">${buildSC(false)}${a0}</div>`;
+  else if(p===1)h=`<span class="pb pp">Phase 2 — Maya triaging</span><div class="abar pu"><div class="adot p"></div>Maya is triaging an inbound call — summary will populate when complete</div><div class="two-col">${buildSC(false)}${a0}</div>`;
+  else if(p===2)h=`<span class="pb pa">Phase 3 — Maya routing</span><div class="sf">Fraud/dispute intent detected. Maya is routing directly to a call center specialist. Branch banker not required for this call type.</div><div class="two-col">${buildSC(true)}${a2}</div>`;
+  else if(p===3)h=`<span class="pb pgr">Phase 4 — routed to specialist</span><div class="two-col">${buildSC(true)}${ar}</div>`;
+  else h=`<span class="pb pg">Phase ${p+1} — not in scope</span><div class="es"><div class="eti">Raymond is not in this call</div><div class="ebo">Maya matched the fraud intent directly to a call center specialist. Raymond stayed on the floor for walk-in customers.</div></div>`;
   el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
-/* ── Specialist ── */
-function rSpecialist(){
-  const el=document.getElementById('v-specialist'); const p=phase; let h='';
-  if(p<=1)h=b('Phase '+(p+1)+' — not yet in scope','gray')+`<div class="empty-state"><div class="empty-title">Specialist in queue</div><div class="queue-item" style="max-width:270px;margin:14px auto 0"><div class="q-avatar">JT</div><div style="flex:1"><div class="q-name">James T.</div><div class="q-sub">Disputes &middot; Available</div></div><span class="q-badge qb-wait">Idle</span></div></div>`;
-  else if(p===2)h=b('Phase 3 — incoming preview','blue')+`<div class="alert-bar"><div class="alert-dot"></div>Incoming — preview before you accept</div><div class="queue-item incoming" style="margin-bottom:12px"><div class="q-avatar">MH</div><div style="flex:1"><div class="q-name">Margaret H. — ••4421</div><div class="q-sub">Card dispute &middot; Branch line</div></div><span class="q-badge qb-new">New</span></div><div class="two-col"><div class="card"><h4>Context preview</h4><div class="card-row"><span class="lbl">Since</span><span class="val">2011</span></div><div class="card-row"><span class="lbl">Intent</span><span class="val">Dispute</span></div><div class="card-row"><span class="lbl">Amount</span><span class="val-flag">$247.00</span></div><div class="card-row"><span class="lbl">Merchant</span><span class="val">AMZN</span></div></div><div class="card"><h4>Fraud signals</h4><div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">0 in 12mo</span></div><div class="card-row"><span class="lbl">Location match</span><span class="val-flag">No</span></div><div class="card-row"><span class="lbl">Device</span><span class="val">New</span></div><div class="card-row"><span class="lbl">Risk score</span><span class="val-flag">74 / high</span></div></div></div><div class="missing-bar">Missing in current prototype: this pre-accept preview moment</div>`;
-  else if(p===3)h=b('Phase 4 — desktop pre-populated','blue')+`<div class="alert-bar green"><div class="alert-dot g"></div>Connected — context loaded &middot; Informed greeting</div><div class="two-col"><div class="card"><h4>Customer</h4><div class="card-row"><span class="lbl">Name</span><span class="val">${summaryData.name}</span></div><div class="card-row"><span class="lbl">Account</span><span class="val">${summaryData.account}</span></div><div class="card-row"><span class="lbl">Branch</span><span class="val">${summaryData.branch}</span></div><div class="card-row"><span class="lbl">Since</span><span class="val">${summaryData.since}</span></div></div><div class="card"><h4>Dispute context</h4><div class="card-row"><span class="lbl">Charge</span><span class="val-flag">$247 &middot; AMZN</span></div><div class="card-row"><span class="lbl">Date</span><span class="val">Apr 27</span></div><div class="card-row"><span class="lbl">Risk</span><span class="val-flag">High (74)</span></div><div class="card-row"><span class="lbl">Prior disputes</span><span class="val-ok">None</span></div></div></div><div class="transcript">AI summary: "Customer noticed $247 Amazon charge she did not make. No prior disputes on record."</div>`;
-  else if(p===4)h=b('Phase 5 — resolution','green')+`<div class="two-col"><div class="card"><h4>Dispute form</h4><div class="card-row"><span class="lbl">Type</span><span class="val">Unauthorized</span></div><div class="card-row"><span class="lbl">Amount</span><span class="val">$247.00</span></div><div class="card-row"><span class="lbl">Status</span><span class="val-ok">Filed</span></div><div class="card-row"><span class="lbl">Ref</span><span class="val">DIS-2024-9912</span></div></div><div class="card"><h4>Actions taken</h4><div class="card-row"><span class="lbl">Dispute filed</span><span class="val-ok">Yes</span></div><div class="card-row"><span class="lbl">Provisional credit</span><span class="val-ok">$247.00</span></div><div class="card-row"><span class="lbl">Card reissue</span><span class="val">Offered</span></div><div class="card-row"><span class="lbl">Timeline</span><span class="val">3–5 days</span></div></div></div>`;
-  else h=b('Phase 6 — wrap-up','amber')+`<div class="missing-bar" style="margin-bottom:12px">Missing: wrap-up and notes-back-to-context</div><div class="two-col"><div class="card"><h4>Call summary</h4><div class="card-row"><span class="lbl">Duration</span><span class="val">4:07</span></div><div class="card-row"><span class="lbl">Outcome</span><span class="val-ok">Resolved</span></div><div class="card-row"><span class="lbl">FCR</span><span class="val-ok">Yes</span></div><div class="card-row"><span class="lbl">Escalated</span><span class="val">No</span></div></div><div class="card"><h4>Notes to context</h4><div style="border:1.5px solid #D3D1C7;border-radius:6px;padding:8px;font-size:11px;color:#5F5E5A;min-height:72px;background:var(--color-background-primary)">Dispute filed, provisional credit issued. Customer satisfied…</div><div style="margin-top:6px;font-size:10px;color:#639922;font-weight:500">Writing back to context object</div></div></div>`;
+function rS(){
+  const el=document.getElementById('v-specialist');const p=phase;let h='';
+  if(p<=1)h=`<span class="pb pg">Phase ${p+1} — not yet in scope</span><div class="es"><div class="eti">James is available in queue</div><div class="qi" style="max-width:270px;margin:14px auto 0"><div class="qa">JT</div><div style="flex:1"><div class="qn">James T.</div><div class="qs">Call center specialist &middot; Available</div></div><span class="qb qbw">Idle</span></div></div>`;
+  else if(p===2)h=`<span class="pb pp">Phase 3 — incoming from Maya</span><div class="abar pu"><div class="adot p"></div>Maya is connecting a triaged caller — context preview available</div><div class="qi ic" style="margin-bottom:12px"><div class="qa">MH</div><div style="flex:1"><div class="qn">Inbound &middot; Fraud / Dispute</div><div class="qs">Triaged by Maya &middot; Lex Ave Branch</div></div><span class="qb qbn">New</span></div><div class="two-col"><div class="card"><h4>Maya's summary</h4><div style="font-size:11px;color:#5F5E5A;line-height:1.6;padding:4px 0;font-style:italic">"Caller noticed $247 AMZN charge Apr 27. No recent Amazon orders. Possible fraud. No prior disputes."</div></div><div class="card"><h4>Fraud signals</h4><div class="cr"><span class="lb">Prior disputes</span><span class="vo">0 in 12mo</span></div><div class="cr"><span class="lb">Location match</span><span class="vf">No</span></div><div class="cr"><span class="lb">Device</span><span class="vl">New</span></div><div class="cr"><span class="lb">Risk score</span><span class="vf">74 / high</span></div></div></div><div class="mbar">Missing in current prototype: this pre-accept preview moment</div>`;
+  else if(p===3)h=`<span class="pb pbl">Phase 4 — handoff &middot; verbal + CRM</span><div class="abar gr"><div class="adot g"></div>Maya briefed James verbally &middot; CRM context pulled from database</div><div class="two-col"><div class="card"><h4>CRM — client context</h4><div class="cr"><span class="lb">Name</span><span class="vl">${SD.name}</span></div><div class="cr"><span class="lb">Account</span><span class="vl">${SD.account}</span></div><div class="cr"><span class="lb">Branch</span><span class="vl">${SD.branch}</span></div><div class="cr"><span class="lb">Since</span><span class="vl">${SD.since}</span></div></div><div class="card"><h4>Maya's DB entry</h4><div class="cr"><span class="lb">Charge</span><span class="vf">$247 &middot; AMZN</span></div><div class="cr"><span class="lb">Date</span><span class="vl">Apr 27</span></div><div class="cr"><span class="lb">Risk</span><span class="vf">High (74)</span></div><div class="cr"><span class="lb">Full transcript</span><span class="vo">Saved</span></div></div></div><div style="font-size:11px;color:#5F5E5A;margin-top:8px;font-style:italic;line-height:1.5">Maya (verbal): "Margaret noticed $247 AMZN charge Apr 27. No recent orders. Possible fraud. No prior disputes on record."</div>`;
+  else if(p===4)h=`<span class="pb pgr">Phase 5 — resolution in progress</span><div class="two-col"><div class="card"><h4>Dispute form</h4><div class="cr"><span class="lb">Type</span><span class="vl">Unauthorized</span></div><div class="cr"><span class="lb">Amount</span><span class="vl">$247.00</span></div><div class="cr"><span class="lb">Status</span><span class="vo">Filed</span></div><div class="cr"><span class="lb">Ref</span><span class="vl">DIS-2024-9912</span></div></div><div class="card"><h4>Actions taken</h4><div class="cr"><span class="lb">Dispute filed</span><span class="vo">Yes</span></div><div class="cr"><span class="lb">Provisional credit</span><span class="vo">$247.00</span></div><div class="cr"><span class="lb">Card reissue</span><span class="vl">Offered</span></div><div class="cr"><span class="lb">Timeline</span><span class="vl">3-5 days</span></div></div></div>`;
+  else h=`<span class="pb pa">Phase 6 — wrap-up</span><div class="mbar" style="margin-bottom:12px">Missing: wrap-up and notes-back-to-CRM</div><div class="two-col"><div class="card"><h4>Call summary</h4><div class="cr"><span class="lb">Duration</span><span class="vl">4:07</span></div><div class="cr"><span class="lb">Outcome</span><span class="vo">Resolved</span></div><div class="cr"><span class="lb">FCR</span><span class="vo">Yes</span></div><div class="cr"><span class="lb">Escalated</span><span class="vl">No</span></div></div><div class="card"><h4>Notes to CRM</h4><div style="border:1.5px solid #D3D1C7;border-radius:6px;padding:8px;font-size:11px;color:#5F5E5A;min-height:68px;background:#fff">Dispute filed for $247 AMZN charge. Provisional credit issued. Context preserved end to end.</div><div style="margin-top:6px;font-size:10px;color:#639922;font-weight:500">Writing back to CRM / context store</div></div></div>`;
   el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
-/* ── Asif ── */
-function rAsif(){
-  const el=document.getElementById('v-asif'); const p=phase; let h='';
-  if(p<5)h=b('Phase '+(p+1)+' — call in progress','gray')+`<div class="empty-state"><div class="empty-title">Dashboard updates after wrap-up</div><div class="empty-body">Asif sees aggregate patterns — not live calls.<br>Go to phase 6 to see his view.</div><div class="empty-metrics"><div class="metric"><div class="ml">AHT</div><div class="mv">—</div></div><div class="metric"><div class="ml">FCR</div><div class="mv">—</div></div><div class="metric"><div class="ml">CSAT</div><div class="mv">—</div></div></div></div>`;
-  else h=b('Phase 6 — post-call analytics','green')+`<div class="dash-grid"><div class="metric"><div class="ml">Avg handle time</div><div class="mv">5.1m</div><div class="md md-up">↓ 37% vs baseline</div></div><div class="metric"><div class="ml">First call res.</div><div class="mv">84%</div><div class="md md-up">↑ 12pts</div></div><div class="metric"><div class="ml">CSAT delta</div><div class="mv">+18</div><div class="md md-up">vs pre-AI avg</div></div></div><div class="two-col"><div class="card"><h4>This week</h4><div class="card-row"><span class="lbl">Card dispute</span><span class="val">312</span></div><div class="card-row"><span class="lbl">Balance inquiry</span><span class="val">204</span></div><div class="card-row"><span class="lbl">Account unlock</span><span class="val">87</span></div><div class="card-row"><span class="lbl">Other</span><span class="val">143</span></div></div><div class="card"><h4>Flags</h4><div style="background:#FCEBEB;border:1px solid #F09595;border-radius:6px;padding:8px 9px;font-size:11px;color:#791F1F;margin-bottom:6px">NVX Digital cluster — 23 calls, Apr 26–28</div><div style="background:#FAEEDA;border:1px solid #EF9F27;border-radius:6px;padding:8px 9px;font-size:11px;color:#633806">Midtown East: transfer rate ↑8%</div></div></div><button class="ghost-btn" onclick="sendPrompt('What metrics should Asif track to measure the AI handoff system?')">What should Asif track? ↗</button>`;
+function rA(){
+  const el=document.getElementById('v-asif');const p=phase;let h='';
+  if(p<5)h=`<span class="pb pg">Phase ${p+1} — call in progress</span><div class="es"><div class="eti">Dashboard updates after wrap-up</div><div class="ebo">Asif sees aggregate patterns — not live calls.<br>Go to phase 6 to see his view.</div><div class="em"><div class="mc"><div class="ml">AHT</div><div class="mv">—</div></div><div class="mc"><div class="ml">FCR</div><div class="mv">—</div></div><div class="mc"><div class="ml">CSAT</div><div class="mv">—</div></div></div></div>`;
+  else h=`<span class="pb pgr">Phase 6 — post-call analytics</span><div class="dg"><div class="mc"><div class="ml">Avg handle time</div><div class="mv">5.1m</div><div class="md">&#x2193; 37% vs baseline</div></div><div class="mc"><div class="ml">First call res.</div><div class="mv">84%</div><div class="md">&#x2191; 12pts</div></div><div class="mc"><div class="ml">CSAT delta</div><div class="mv">+18</div><div class="md">vs pre-AI avg</div></div></div><div class="two-col"><div class="card"><h4>This week &middot; Maya triage</h4><div class="cr"><span class="lb">Fraud / dispute</span><span class="vl">312</span></div><div class="cr"><span class="lb">Balance inquiry</span><span class="vl">204</span></div><div class="cr"><span class="lb">Account unlock</span><span class="vl">87</span></div><div class="cr"><span class="lb">Other</span><span class="vl">143</span></div></div><div class="card"><h4>Flags</h4><div style="background:#FCEBEB;border:1px solid #F09595;border-radius:6px;padding:8px 9px;font-size:11px;color:#791F1F;margin-bottom:6px">NVX Digital cluster — 23 calls, Apr 26–28</div><div style="background:#FAEEDA;border:1px solid #EF9F27;border-radius:6px;padding:8px 9px;font-size:11px;color:#633806">Lex Ave: transfer rate &#x2191;8% this week</div></div></div>`;
   el.innerHTML=`<div style="flex:1">${h}</div>`;
 }
 
-buildTimeline();
+buildTL();
 render();
 </script>
+</body>
+</html>
